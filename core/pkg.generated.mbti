@@ -1,0 +1,135 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/core"
+
+// Values
+pub fn ab_from_presentation(Mat) -> AbGroup
+
+pub fn ab_order(AbGroup) -> Int32
+
+pub fn ab_show(AbGroup) -> String
+
+pub fn det_mod(Mat, Field) -> Int32
+
+pub fn find_stable_relations(Array[Array[Double]], Int32, Double, Double) -> Array[IntRelation]
+
+pub fn fld_add(Field, Int32, Int32) -> Int32
+
+pub fn fld_div(Field, Int32, Int32) -> Int32
+
+pub fn fld_inv(Field, Int32) -> Int32
+
+pub fn fld_mul(Field, Int32, Int32) -> Int32
+
+pub fn fld_neg(Field, Int32) -> Int32
+
+pub fn fld_norm(Field, Int32) -> Int32
+
+pub fn fld_sub(Field, Int32, Int32) -> Int32
+
+pub fn gauss_jordan(Mat, Field) -> Gauss
+
+pub fn igcd(Int32, Int32) -> Int32
+
+pub fn int_pow(Int32, Int32) -> Int32
+
+pub fn integer_relation(Array[Double], Int32, Double, Double) -> IntRelation?
+
+pub fn is_prime(Int32) -> Bool
+
+pub fn mat_add(Mat, Mat, Int32) -> Mat
+
+pub fn mat_build(Int32, Int32, (Int32, Int32) -> Int32) -> Mat
+
+pub fn mat_copy(Mat) -> Mat
+
+pub fn mat_eq_mod(Mat, Mat, Int32) -> Bool
+
+pub fn mat_from_rows(Array[Array[Int32]]) -> Mat
+
+pub fn mat_get(Mat, Int32, Int32) -> Int32
+
+pub fn mat_identity(Int32) -> Mat
+
+pub fn mat_is_zero(Mat) -> Bool
+
+pub fn mat_make(Int32, Int32, Int32) -> Mat
+
+pub fn mat_mod(Mat, Int32) -> Mat
+
+pub fn mat_mul(Mat, Mat, Int32) -> Mat
+
+pub fn mat_mul_vec(Mat, Array[Int32], Int32) -> Array[Int32]
+
+pub fn mat_row(Mat, Int32) -> Array[Int32]
+
+pub fn mat_rows(Mat) -> Array[Array[Int32]]
+
+pub fn mat_scale(Mat, Int32, Int32) -> Mat
+
+pub fn mat_transpose(Mat) -> Mat
+
+pub fn max_abs(Array[Int32]) -> Int32
+
+pub fn mk_field(Int32) -> Field
+
+pub fn mod_pow(Int32, Int32, Int32) -> Int32
+
+pub fn nullspace_basis(Mat, Field) -> Array[Array[Int32]]
+
+pub fn primes_up_to(Int32) -> Array[Int32]
+
+pub fn rank_mod(Mat, Field) -> Int32
+
+pub fn rng_below(Rng, Int32) -> Int32
+
+pub fn rng_next(Rng) -> Int32
+
+pub fn rng_seed(Int32) -> Rng
+
+pub fn safe_prime_bound() -> Int32
+
+pub fn smith_diagonal(Mat) -> Array[Int32]
+
+pub fn solve_linear(Mat, Array[Int32], Field) -> Array[Int32]?
+
+pub fn vec_dot(Array[Int32], Array[Int32], Int32) -> Int32
+
+pub fn vec_scale(Array[Int32], Int32, Int32) -> Array[Int32]
+
+// Errors
+
+// Types and methods
+pub struct AbGroup {
+  free_rank : Int32
+  torsion : Array[Int32]
+}
+
+pub struct Field {
+  p : Int32
+}
+
+pub struct Gauss {
+  rref : Mat
+  rank : Int32
+  pivots : Array[Int32]
+}
+
+pub struct IntRelation {
+  coeffs : Array[Int32]
+  residual : Double
+  height : Int32
+}
+
+pub struct Mat {
+  rows : Int32
+  cols : Int32
+  data : Array[Int32]
+}
+
+pub struct Rng {
+  mut state : Int64
+}
+
+// Type aliases
+
+// Traits

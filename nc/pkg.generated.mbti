@@ -1,0 +1,69 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/nc"
+
+// Values
+pub fn are_flippable(Array[Chord], Array[Chord]) -> Bool
+
+pub fn binom_i64(Int32, Int32) -> Int64
+
+pub fn catalan_upto(Int32) -> Array[Int32]
+
+pub fn check_metric_freedom(Array[Array[Int32]], Int32) -> (Int32, Int32, Bool)
+
+pub fn chord(Int32, Int32) -> Chord
+
+pub fn chords_cross(Chord, Chord) -> Bool
+
+pub fn count_nc_trees_brute(Int32) -> Int32
+
+pub fn cyclic_weights(Array[Int32], Int32) -> Array[Array[Int32]]
+
+pub fn dual_edge_count(Array[(Int32, Int32)]) -> Int32
+
+pub fn dual_graph(Array[Array[Int32]], Array[Chord]) -> Array[(Int32, Int32)]
+
+pub fn enumerate_nc_trees(Int32) -> Array[Array[Chord]]
+
+pub fn flip_degrees(Array[Array[Chord]]) -> Array[Int32]
+
+pub fn flip_graph_connected(Array[Array[Chord]]) -> Bool
+
+pub fn is_metric_w(Array[Array[Int32]], Int32) -> Bool
+
+pub fn is_noncrossing(Array[Chord]) -> Bool
+
+pub fn is_tree(Int32, Array[Chord]) -> Bool
+
+pub fn max_degree(Int32, Array[(Int32, Int32)]) -> Int32
+
+pub fn min_weight_nc_matching(Array[Array[Int32]], Int32) -> (Int32, Array[Chord])
+
+pub fn min_weight_nc_matching_brute(Array[Array[Int32]], Int32) -> Int32
+
+pub fn mst_weight(Array[Array[Int32]], Int32) -> (Int32, Array[Chord])
+
+pub fn nc_freedom_gap(Array[Int32], Int32) -> (Int32, Int32)
+
+pub fn nc_perfect_matchings(Int32) -> Array[Array[Chord]]
+
+pub fn nc_tree_divisible(Int32) -> Bool
+
+pub fn nc_tree_formula(Int32) -> Int64
+
+pub fn strict_monotone(Array[Int32]) -> Bool
+
+pub fn triangles_of(Int32, Array[Chord]) -> Array[Array[Int32]]
+
+pub fn triangulations(Int32) -> Array[Array[Chord]]
+
+// Errors
+
+// Types and methods
+pub struct Chord {
+  a : Int32
+  b : Int32
+}
+
+// Type aliases
+
+// Traits

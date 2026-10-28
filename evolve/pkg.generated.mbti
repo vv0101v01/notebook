@@ -1,0 +1,44 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/evolve"
+
+// Values
+pub fn check_derived_then_transfer(Ledger, Ledger, Int32, Bool, Array[Int32]) -> (Bool, Bool)
+
+pub fn derive_relations(Ledger, Int32, Bool) -> Array[Array[Int32]]
+
+pub fn dot(Array[Int32], Array[Int32]) -> Int32
+
+pub fn evolve_flips(Int32, Int32, Int32) -> Ledger
+
+pub fn evolve_gauge(Int32, Int32, Int32) -> Ledger
+
+pub fn evolve_radon(Int32, Int32, Int32, Int32) -> Ledger
+
+pub fn evolve_shear(Int32, Int32, Int32) -> Ledger
+
+pub fn evolve_summary() -> Array[Bool]
+
+pub fn evolve_vr(Int32, Int32) -> Ledger
+
+pub fn holds_exact(Ledger, Array[Int32]) -> Bool
+
+pub fn holds_mod(Ledger, Array[Int32], Int32) -> Bool
+
+pub fn ledger_len(Ledger) -> Int32
+
+pub fn ledger_of(Array[Array[Int32]]) -> Ledger
+
+pub fn ledger_with_const(Array[Array[Int32]]) -> Ledger
+
+pub fn relation_derived(Array[Array[Int32]], Array[Int32], Int32) -> Bool
+
+// Errors
+
+// Types and methods
+pub struct Ledger {
+  rows : Array[Array[Int32]]
+}
+
+// Type aliases
+
+// Traits

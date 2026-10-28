@@ -1,0 +1,77 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/gauge"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn canonical_code(Lattice, Array[Int32]) -> Int32
+
+pub fn check_bianchi(Lattice, Array[Int32]) -> Bool
+
+pub fn check_bott_periodicity(Int32, Int32) -> Bool
+
+pub fn check_chirality(Int32, Int32) -> Bool
+
+pub fn check_clifford(Int32, Int32) -> Bool
+
+pub fn check_clifford_center(Int32, Int32) -> (Bool, Bool)
+
+pub fn check_clifford_is_twisted(Int32, Int32) -> Bool
+
+pub fn check_curvature_invariant(Lattice, Array[Int32], Array[Int32]) -> Bool
+
+pub fn check_holonomy_invariant(Lattice, Array[Int32], Array[Int32]) -> Bool
+
+pub fn check_moduli_bijective(Lattice) -> (Bool, Int32)
+
+pub fn clifford_cocycle_vec(Int32) -> Array[Int32]
+
+pub fn code_of(Lattice, Array[Int32]) -> Int32
+
+pub fn curvature(Lattice, Array[Int32]) -> Array[Int32]
+
+pub fn edge_ends(Lattice, Int32) -> (Int32, Int32)
+
+pub fn even_center_dim(Int32, Int32) -> Int32
+
+pub fn flat_moduli(Lattice) -> (Int32, Int32)
+
+pub fn gamma_mats(Int32, Int32) -> Array[@core.Mat]
+
+pub fn gauge_transform(Lattice, Array[Int32], Array[Int32]) -> Array[Int32]
+
+pub fn holonomies(Lattice, Array[Int32]) -> (Int32, Int32)
+
+pub fn is_flat(Lattice, Array[Int32]) -> Bool
+
+pub fn lat_edges(Lattice) -> Int32
+
+pub fn lat_sites(Lattice) -> Int32
+
+pub fn mk_lattice(Int32, Int32) -> Lattice
+
+pub fn pauli_string(Array[Int32], Int32) -> @core.Mat
+
+pub fn pauli_x() -> @core.Mat
+
+pub fn pauli_y(Int32) -> Int32?
+
+pub fn pauli_z(Int32) -> @core.Mat
+
+pub fn rho(Array[@core.Mat], Int32, Int32, Int32) -> @core.Mat
+
+pub fn spinor_dim(Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct Lattice {
+  n : Int32
+  ell : Int32
+}
+
+// Type aliases
+
+// Traits

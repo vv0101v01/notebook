@@ -1,0 +1,92 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/twist"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn center_dim(Omega) -> Int32
+
+pub fn center_matrix(Omega) -> @core.Mat
+
+pub fn check_gauge_invariance(Omega, Array[Int32]) -> (Bool, Bool)
+
+pub fn check_group_axioms(Grp) -> Bool
+
+pub fn check_skew_rank_formula(Omega) -> (Bool, Bool)
+
+pub fn cochain_expand(Grp, Array[Int32], Int32) -> Array[Int32]
+
+pub fn cohomologous(Grp, Int32, Array[Int32], Array[Int32]) -> Bool
+
+pub fn d1_matrix(Grp, Int32) -> @core.Mat
+
+pub fn d2_matrix(Grp, Int32) -> @core.Mat
+
+pub fn grp(Array[Int32]) -> Grp
+
+pub fn grp_add(Grp, Array[Int32], Array[Int32]) -> Array[Int32]
+
+pub fn grp_code(Grp, Array[Int32]) -> Int32
+
+pub fn grp_neg(Grp, Array[Int32]) -> Array[Int32]
+
+pub fn grp_of_code(Grp, Int32) -> Array[Int32]
+
+pub fn grp_order(Grp) -> Int32
+
+pub fn grp_zero(Grp) -> Array[Int32]
+
+pub fn h1_dim(Grp, Int32) -> Int32
+
+pub fn h2_compute(Grp, Int32) -> (Int32, Int32, Int32, Bool)
+
+pub fn h2_dim(Grp, Int32) -> Int32
+
+pub fn is_perfect_square(Int32) -> Bool
+
+pub fn mk_omega(Grp, Int32, Int32, Array[Int32]) -> Omega
+
+pub fn omega_gauge(Omega, Array[Int32]) -> Array[Int32]
+
+pub fn omega_get(Omega, Int32, Int32) -> Int32
+
+pub fn omega_is_cocycle(Omega) -> Bool
+
+pub fn omega_radical(Omega) -> Array[Int32]
+
+pub fn omega_radical_size(Omega) -> Int32
+
+pub fn omega_with_w(Omega, Array[Int32]) -> Omega
+
+pub fn primitive_root(Int32, Int32) -> Int32
+
+pub fn skew_matrix(Omega) -> @core.Mat
+
+pub fn tw_irrep_dim_sq(Omega) -> Int32
+
+pub fn tw_k0_rank(Omega) -> Int32
+
+pub fn var_count(Grp) -> Int32
+
+pub fn var_index(Grp, Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct Grp {
+  orders : Array[Int32]
+}
+
+pub struct Omega {
+  g : Grp
+  ell : Int32
+  field : Int32
+  zeta : Int32
+  w : Array[Int32]
+}
+
+// Type aliases
+
+// Traits

@@ -1,0 +1,12 @@
+import {
+  "username/tensorlab/core",
+  "username/tensorlab/tensor",
+  "username/tensorlab/nc",
+  "username/tensorlab/twist",
+  "username/tensorlab/gauge",
+  "username/tensorlab/radon",
+  "username/tensorlab/metric",
+  "username/tensorlab/evolve",
+}
+
+pkgtype(kind: "executable")

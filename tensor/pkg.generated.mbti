@@ -1,0 +1,75 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/tensor"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn check_kronecker_rank_identity(@core.Mat, @core.Mat, Int32) -> Bool
+
+pub fn check_shear_invariance(Tensor3) -> Bool
+
+pub fn check_subadditivity(Array[(Tensor3, Tensor3)], Rank1Table) -> Bool
+
+pub fn classify222(Tensor3, Rank1Table) -> (Int32, Int32, Int32)
+
+pub fn decompose(Tensor3, Rank1Table, Int32) -> Array[(Int32, Int32)]?
+
+pub fn flattening_bound_of_product(@core.Mat, @core.Mat, Int32) -> Int32
+
+pub fn flattening_lower_bound(Tensor3) -> Int32
+
+pub fn hyperdet222(Tensor3) -> Int32
+
+pub fn is_rank1(Tensor3) -> Bool
+
+pub fn kron_mat(@core.Mat, @core.Mat, Int32) -> @core.Mat
+
+pub fn nonzero_vectors_all(Int32, Int32) -> Array[Array[Int32]]
+
+pub fn rank1_table(Int32, Int32) -> Rank1Table
+
+pub fn rank2_decomposition_count(Tensor3, Rank1Table) -> Int32
+
+pub fn rank2_ordered_pairs(Tensor3, Rank1Table) -> Int32
+
+pub fn t3_add(Tensor3, Tensor3) -> Tensor3
+
+pub fn t3_flatten(Tensor3, Int32) -> @core.Mat
+
+pub fn t3_get(Tensor3, Int32, Int32, Int32) -> Int32
+
+pub fn t3_make(Int32, Int32, Int32, Int32) -> Tensor3
+
+pub fn t3_of(Int32, Int32, Int32, Int32, (Int32, Int32, Int32) -> Int32) -> Tensor3
+
+pub fn t3_simple(Array[Int32], Array[Int32], Array[Int32], Int32) -> Tensor3
+
+pub fn t3_smul(Int32, Tensor3) -> Tensor3
+
+pub fn tensor_rank(Tensor3, Rank1Table, Int32) -> Int32?
+
+pub fn vec_code(Array[Int32], Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct Rank1Table {
+  dim : Int32
+  field : Int32
+  flags : Array[Bool]
+  list : Array[Array[Int32]]
+}
+
+pub struct Tensor3 {
+  dim0 : Int32
+  dim1 : Int32
+  dim2 : Int32
+  field : Int32
+  data : Array[Int32]
+}
+
+// Type aliases
+
+// Traits

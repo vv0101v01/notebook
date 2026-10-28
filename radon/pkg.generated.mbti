@@ -1,0 +1,52 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/radon"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn check_gram(Radon) -> Bool
+
+pub fn check_injective(Radon) -> Bool
+
+pub fn check_inversion(Radon, Array[Int32]) -> Bool
+
+pub fn check_quad_identity(Radon, Array[Int32]) -> Bool
+
+pub fn check_slice(Radon, Array[Int32]) -> Bool
+
+pub fn check_total_weight(Radon, Array[Int32]) -> Bool
+
+pub fn fourier(Array[Int32], Int32, Int32) -> Array[Int32]
+
+pub fn gram_apply_inv(Radon, Array[Int32]) -> Array[Int32]
+
+pub fn gram_matrix(Radon) -> @core.Mat
+
+pub fn line_count(Radon) -> Int32
+
+pub fn line_points(Radon, Int32, Int32) -> Array[Int32]
+
+pub fn mk_radon(Int32, Int32) -> Radon
+
+pub fn radon_matrix(Radon) -> @core.Mat
+
+pub fn radon_rank(Radon) -> (Int32, Int32)
+
+pub fn rdim(Radon) -> Int32
+
+pub fn root_of_unity(Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct Radon {
+  n : Int32
+  p : Int32
+  dirs : Int32
+}
+
+// Type aliases
+
+// Traits

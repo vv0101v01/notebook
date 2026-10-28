@@ -1,0 +1,35 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/sgauge"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn cl_center_anticenter(Int32) -> (Int32, Int32)
+
+pub fn cl_check_assoc(Int32, Array[Int32], Int32, Int32, @core.Rng) -> Bool
+
+pub fn cl_comm_sign(Int32, Int32) -> Int32
+
+pub fn cl_deg(Int32) -> Int32
+
+pub fn cl_dim(Int32) -> Int32
+
+pub fn cl_mul(Int32, Int32, Array[Int32], Int32) -> (Int32, Int32)
+
+pub fn cl_sign(Int32, Int32) -> Int32
+
+pub fn grtensor_check(Int32, Int32, Array[Int32], Int32) -> Bool
+
+pub fn mat_trace(@core.Mat, Int32) -> Int32
+
+pub fn shift_mat(Int32, Int32) -> @core.Mat
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

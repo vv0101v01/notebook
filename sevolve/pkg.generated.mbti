@@ -1,0 +1,29 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/sevolve"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn evo_payload(Int32, Int32, Int32, Int32) -> String
+
+pub fn graded_conjugate(@core.Mat, @core.Mat, @core.Mat, @core.Mat, @core.Mat, Int32) -> @core.Mat
+
+pub fn random_invertible(Int32, Int32, @core.Rng) -> @core.Mat
+
+pub fn random_unipotent(Int32, Int32, @core.Rng) -> (@core.Mat, @core.Mat)
+
+pub fn susy_evolve(@core.Mat, @core.Mat, @core.Mat, Int32) -> @core.Mat
+
+pub fn susy_q(@core.Mat) -> @core.Mat
+
+pub fn susy_str_pow(@core.Mat, Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

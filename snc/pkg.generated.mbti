@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/snc"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn all_partitions(Int32) -> Array[Array[Int32]]
+
+pub fn block_list(Array[Int32]) -> Array[Array[Int32]]
+
+pub fn catalan(Int32) -> Int32
+
+pub fn cycle_adj(Int32, Int32) -> @core.Mat
+
+pub fn diag_cross((Int32, Int32), (Int32, Int32)) -> Bool
+
+pub fn diagonals(Int32) -> Array[(Int32, Int32)]
+
+pub fn flip_adjacent(Array[Int32], Array[Int32]) -> Bool
+
+pub fn flip_graph(Int32, Int32) -> (Int32, @core.Mat)
+
+pub fn graph_diameter(Int32, @core.Mat) -> Int32
+
+pub fn is_noncrossing(Array[Int32]) -> Bool
+
+pub fn mobius_from_bottom(Int32) -> Map[Int32, Int32]
+
+pub fn moment_from_free_cumulants(Array[Int32], Int32, Int32) -> Int32
+
+pub fn nc_partitions(Int32) -> Array[Array[Int32]]
+
+pub fn refines(Array[Int32], Array[Int32]) -> Bool
+
+pub fn super_catalan(Int32, Int32, Int32) -> Int32
+
+pub fn triangulations(Int32) -> Array[Array[Int32]]
+
+pub fn von_szily_sum(Int32, Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

@@ -114,3 +114,92 @@ moon check          # 0 errors, 1 warning（nc/moon.pkg）
 moon test           # Total tests: 66, passed: 66, failed: 0
 moon run cmd/main   # 92 行報告
 ```
+
+---
+
+# 第二輪：superlab 十套件（s* 前綴）健檢
+
+對象：`sledger/score/spec/stensor/snc/stwist/sgauge/sradon/smetric/sevolve` + `cmd/super` + `cmd/superledger`。
+方法完全沿用 §1（同一套掃描腳本邏輯：跨套件 `@pkg.name` + 套件內裸名計數，排除 `_build`）。
+
+## S0. 一頁結論
+
+| 指標 | 健檢前 | 健檢後 |
+|---|---|---|
+| `moon check` | 0 errors, **36 warnings** | 0 errors, **10 warnings**（全部為 test-only 匯入誤判，見 S3） |
+| `moon test` | 125 passed | **125 passed**（`moon clean` 全量重建複驗） |
+| 零引用 `pub` 項目 | **14** | **0** |
+| 同名重複定義 | 6 組 | **3 組**（其餘 3 組鑑別為「同名不同域」，見 S2） |
+| 帳本 | 創世 + 9 條 | 創世 + 10 條（新增 `health` 記錄，`sh ledger/superledger.sh verify` → VERIFY_OK） |
+
+## S1. 死碼（清死碼）：14 項全刪
+
+`spec.poly_eval` 原可留給 `check_cayley_hamilton` 復用，但後者走的是**矩陣** Horner
+（`diag_scale(cp[k])` 逐項加回），與純量求值不同域——確認為死碼後刪除。
+
+| 套件 | 刪除項 |
+|---|---|
+| sledger | `sled_of_recs`、`sled_find`（驗證流程改走 `sled_parse_line(s)`） |
+| score | `gr_body`、`gr_grade`、`gr_show`、`smat_of_blocks`、`smat_parity` |
+| spec | `poly_eval`、`dmat_mul`、`dmat_t` |
+| stensor | `coord_index`、`spoly_degrees` |
+| snc | `canon_blocks` |
+| sradon | `mat_trace` |
+
+## S2. 重複（去重）：3 組合併 + 3 組鑑別為假陽性
+
+**合併**（刪除地端、改呼叫單一實作）：
+
+| 重複 | 處置 |
+|---|---|
+| `mat_eq_mod` ×3（core/sgauge/sradon） | 刪 sgauge、sradon 兩份，全走 `@core.mat_eq_mod` |
+| `cycle_adj` ×2（snc/smetric） | 刪 smetric 份，`cycle_lap` 改呼叫 `@snc.cycle_adj`（moon.pkg 增匯 snc） |
+| `zero_root_mult`（smetric）vs `root_zero_mult`（spec） | 刪 smetric 份，測試改用 `@spec.root_zero_mult`（charpoly 係數已正規化至 `0..p−1`，語義等價） |
+
+**假陽性**（同名但不同域，保留並在此存證）：
+
+| 名字 | 兩處 | 為何不是重複 |
+|---|---|---|
+| `is_noncrossing` / `triangulations` | nc / snc | nc 以 `Chord` 結構工作（幾何原域）；snc 以對角線**索引**工作（flip 圖的鄰接需要索引比較）。表示法不同、消費者不同，轉接層的複雜度 ≈ 現有實作 |
+| `susy_str_pow` | spec / sevolve | 簽名不同：`spec.susy_str_pow(s : Susy, k)`（結構域）vs `sevolve.susy_str_pow(d : Mat, k, p)`（矩陣域，供共軛演化後的 D′ 抽取） |
+
+## S3. 警告處置：36 → 10
+
+* **真死碼匯入**（main 與 test 皆未用，已刪）：`cmd/superledger` 的 `core/spec/stwist`、`sevolve` 的 `score`。
+* **未用變數**（已修）：`snc.flip_graph` 的 `p`（矩陣項改 `1 % p`）；`sevolve.susy_q` 的 `p`（參數移除，呼叫點同步）；測試 lambda 的未用 `i/j/a/b`（改 `_i/_j/_a/_b`，**有用到的還原**）；`stensor_test.sum_poly` 的 `p`（參數移除）；`Map[…] = {}` 歧義（改 `Map([])`）。
+* **剩餘 10 個警告全部是 `unused_package`（test-only 匯入）**，與本庫 `nc/moon.pkg` 同類：
+  MoonBit 匯入以套件為單位，blackbox 測試（`*_test.mbt`）的用量看不見。清單：
+  `sevolve(spec,sledger)`、`sgauge(gauge,tensor)`、`smetric(spec)`、`snc(spec)`、`sradon(spec)`、`stensor(tensor,score)`、`nc(core)`。
+  移除即測試編譯失敗（與 §0 同一實測結論）。**保留是正確選擇，不是遺漏。**
+
+## S4. 溢位審計（superlab 新碼）
+
+沿用 §1.3 的邊界（`p ≤ 46337`，安全上界 `p² + p = 2,147,163,906 < 2³¹−1`）。逐式檢查結論：**全部安全**。
+
+* `spec.charpoly`：`es[k−i] · pows[i]` 單乘積 `< p²`；符號項 `(p−e) % p` 先模後用。
+* `stensor.kron_twisted / flatten_signed`：`(av·bv % p) · twist` —— 第一乘積先模再乘 `twist ≤ p−1`，恆 `< p²`。
+* `sradon.poly_mul / poly_out`：累加項 `out[i+j] + a[i]·b[j] < p² + p`（恰在安全邊界內）；每步 `% q`。
+* `sradon.sm_filter`：`(n % q · n) % q · ((n+1) % q)` 兩段先模後乘，各段 `< q²`。
+* `stwist.bilinear_cocycle`：`c·av·bv` 未先模即加總——但 `av/bv` 是 (ℤ/2)^d 的分量（值 ∈ {0,1}）、`c ∈ {0,1}`，量級 ~d³。
+* `snc`：von Szily 走 Int64；`moment_from_free_cumulants` 的 `prod · (r[sz] % p)` 先模後乘。
+* `sevolve/sgauge/smetric/sledger`：乘積皆單層 `< p²` 或運算元本身 `< p`。
+
+## S5. 帳本記錄
+
+健檢結論已入鏈（確定性 payload，重跑必重得）：
+
+```
+{"seq":10,"tag":"health","kind":"health","payload":"scope=superlab;dead_removed=14;dup_merged=4;warnings=36to10;errors=0;tests=125of125",...}
+```
+
+## S6. 重跑（superlab 部分）
+
+```sh
+export PATH="$HOME/.moon/bin:$PATH"
+cd tensorlab
+moon clean
+moon check          # 0 errors, 10 warnings（全部 test-only 匯入誤判，見 S3）
+moon test           # Total tests: 125, passed: 125, failed: 0
+moon run cmd/super  # 超化報告
+moon run cmd/superledger -- --verify $(cat ledger/LEDGER.jsonl | tr '\n' ' ')   # VERIFY_OK records=10
+```

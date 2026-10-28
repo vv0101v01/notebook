@@ -1,0 +1,11 @@
+import {
+  "username/tensorlab/sledger",
+  "username/tensorlab/score",
+  "username/tensorlab/stensor",
+  "username/tensorlab/sgauge",
+  "username/tensorlab/twist",
+  "username/tensorlab/snc",
+  "moonbitlang/core/env",
+}
+
+pkgtype(kind: "executable")

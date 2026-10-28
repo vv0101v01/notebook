@@ -1,0 +1,48 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/stensor"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn coord_parity(Int32) -> Int32
+
+pub fn flatten_signed(Array[Int32], Int32, Int32, Int32, Array[Int32], Array[Int32], Int32) -> (@core.Mat, @core.Mat, @core.Mat)
+
+pub fn kron_twist_diag(@core.Mat, @core.Mat, Int32, Int32, Array[Int32]) -> @core.Mat
+
+pub fn kron_twisted(@core.Mat, @core.Mat, Int32, Int32, Array[Int32]) -> @core.Mat
+
+pub fn monomial_key(Array[Int32]) -> Int32
+
+pub fn odd_derivation(Int32, Bool, Int32) -> OddDer
+
+pub fn oddder_of(Int32, Array[(Int32, Int32, Int32)]) -> OddDer
+
+pub fn quartic_monomials() -> Array[Int32]
+
+pub fn spoly_add_term(SPoly, Int32, Int32) -> SPoly
+
+pub fn spoly_derive(OddDer, SPoly) -> SPoly
+
+pub fn spoly_of_key(Int32, Int32) -> SPoly
+
+pub fn spoly_zero(Int32) -> SPoly
+
+// Errors
+
+// Types and methods
+pub struct OddDer {
+  pairs : Map[Int32, (Int32, Int32)]
+  p : Int32
+}
+
+pub struct SPoly {
+  p : Int32
+  terms : Map[Int32, Int32]
+}
+
+// Type aliases
+
+// Traits

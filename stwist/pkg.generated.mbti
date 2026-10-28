@@ -1,0 +1,59 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/stwist"
+
+import {
+  "username/tensorlab/core",
+  "username/tensorlab/twist",
+}
+
+// Values
+pub fn b_omega_bilinear(SW) -> Bool
+
+pub fn bilinear_cocycle(@twist.Grp, Int32, Int32, Array[Array[Int32]]) -> SW
+
+pub fn d2_unnorm(@twist.Grp, Int32) -> @core.Mat
+
+pub fn d3_matrix(@twist.Grp, Int32) -> @core.Mat
+
+pub fn h3_dim(@twist.Grp, Int32) -> Int32
+
+pub fn parity(@twist.Grp, Int32) -> Int32
+
+pub fn sign_cocycle_holds(@twist.Grp, Int32, Int32, Int32) -> Bool
+
+pub fn sign_is_coboundary(@twist.Grp) -> Bool
+
+pub fn sign_is_coboundary_zero(@twist.Grp) -> Bool
+
+pub fn sign_sigma(@twist.Grp, Int32, Int32, Int32) -> Int32
+
+pub fn sw_center_dim(SW, Bool) -> Int32
+
+pub fn sw_gauge(SW, Array[Int32]) -> SW
+
+pub fn sw_is_cocycle(SW) -> Bool
+
+pub fn sw_of(@twist.Grp, Int32, Int32, Array[Int32]) -> SW
+
+pub fn sw_radical_size(SW) -> Int32
+
+pub fn sw_reg_trace(SW, Int32, Bool) -> Int32
+
+pub fn sw_struct(SW, Int32, Int32) -> Int32
+
+pub fn sw_supercentral(SW, Int32) -> Bool
+
+// Errors
+
+// Types and methods
+pub struct SW {
+  g : @twist.Grp
+  ell : Int32
+  field : Int32
+  zeta : Int32
+  omega : Array[Int32]
+}
+
+// Type aliases
+
+// Traits

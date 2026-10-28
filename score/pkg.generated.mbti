@@ -1,0 +1,105 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/score"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn binom(Int32, Int32) -> Int32
+
+pub fn count_monomials(Int32, Int32, Int32) -> Int32
+
+pub fn even_det(Gr, Array[Array[Array[Int32]]]) -> Array[Int32]
+
+pub fn even_mat_inv(Gr, Array[Array[Array[Int32]]]) -> Array[Array[Array[Int32]]]?
+
+pub fn even_mat_mul(Gr, Array[Array[Array[Int32]]], Array[Array[Array[Int32]]]) -> Array[Array[Array[Int32]]]
+
+pub fn gr_add(Gr, Array[Int32], Array[Int32]) -> Array[Int32]
+
+pub fn gr_eq(Array[Int32], Array[Int32]) -> Bool
+
+pub fn gr_gen(Gr, Int32) -> Array[Int32]
+
+pub fn gr_inv(Gr, Array[Int32]) -> Array[Int32]
+
+pub fn gr_is_unit(Gr, Array[Int32]) -> Bool
+
+pub fn gr_mk(Int32, Int32) -> Gr
+
+pub fn gr_mul(Gr, Array[Int32], Array[Int32]) -> Array[Int32]
+
+pub fn gr_one(Gr) -> Array[Int32]
+
+pub fn gr_scale(Gr, Array[Int32], Int32) -> Array[Int32]
+
+pub fn gr_size(Gr) -> Int32
+
+pub fn gr_zero(Gr) -> Array[Int32]
+
+pub fn smat_add(SMat, SMat) -> SMat
+
+pub fn smat_from_full(Int32, Int32, Int32, @core.Mat) -> SMat
+
+pub fn smat_full(SMat) -> @core.Mat
+
+pub fn smat_mul(SMat, SMat) -> SMat
+
+pub fn smat_random(@core.Rng, Int32, Int32, Int32, Int32) -> SMat
+
+pub fn smat_sbr(SMat, SMat, Int32, Int32) -> SMat
+
+pub fn smat_scale(SMat, Int32) -> SMat
+
+pub fn smat_st(SMat) -> SMat
+
+pub fn smat_str(SMat) -> Int32
+
+pub fn smatg_ber(SMatG) -> Array[Int32]?
+
+pub fn smatg_ber_abranch(SMatG) -> Array[Int32]?
+
+pub fn smatg_diagonalize(SMatG) -> SMatG
+
+pub fn smatg_mul(SMatG, SMatG) -> SMatG
+
+pub fn smatg_of(Int32, Int32, Gr, Array[Array[Array[Int32]]], Array[Array[Array[Int32]]], Array[Array[Array[Int32]]], Array[Array[Array[Int32]]]) -> SMatG
+
+pub fn smatg_random(@core.Rng, Gr, Int32, Int32) -> SMatG
+
+pub fn smatg_scalar_eps(Gr, Int32, Int32, Array[Int32], Int32) -> SMatG
+
+pub fn smatg_str(SMatG) -> Array[Int32]
+
+// Errors
+
+// Types and methods
+pub struct Gr {
+  k : Int32
+  p : Int32
+}
+
+pub struct SMat {
+  m : Int32
+  n : Int32
+  p : Int32
+  a : @core.Mat
+  b : @core.Mat
+  c : @core.Mat
+  d : @core.Mat
+}
+
+pub struct SMatG {
+  m : Int32
+  n : Int32
+  g : Gr
+  a : Array[Array[Array[Int32]]]
+  b : Array[Array[Array[Int32]]]
+  c : Array[Array[Array[Int32]]]
+  d : Array[Array[Array[Int32]]]
+}
+
+// Type aliases
+
+// Traits

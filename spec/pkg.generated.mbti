@@ -1,0 +1,49 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/spec"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn charpoly(@core.Mat, Int32) -> Array[Int32]
+
+pub fn check_cayley_hamilton(@core.Mat, Int32) -> Bool
+
+pub fn check_chpoly_rel(Susy) -> Bool
+
+pub fn det_sign(Array[Array[Double]]) -> Int32
+
+pub fn jacobi_eigen(Array[Array[Double]]) -> (Array[Double], Array[Array[Double]])
+
+pub fn root_zero_mult(Array[Int32]) -> Int32
+
+pub fn spectral_flow(Array[Array[Double]], Array[Array[Double]], Int32) -> Int32
+
+pub fn spectral_flow_super(Array[Array[Double]], Array[Array[Double]], Array[Array[Double]], Array[Array[Double]], Int32) -> Int32
+
+pub fn susy_he(Susy) -> @core.Mat
+
+pub fn susy_ho(Susy) -> @core.Mat
+
+pub fn susy_index(Susy) -> Int32
+
+pub fn susy_kernel_dims(Susy) -> (Int32, Int32)
+
+pub fn susy_of(@core.Mat, Int32) -> Susy
+
+pub fn susy_str_pow(Susy, Int32) -> Int32
+
+pub fn trace_pow(@core.Mat, Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct Susy {
+  d : @core.Mat
+  p : Int32
+}
+
+// Type aliases
+
+// Traits

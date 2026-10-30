@@ -659,9 +659,85 @@ fn main {
 
   println("")
   println(
+    "[28] 逐結構規範形（@canon）：完備性 + 冪等性 + 不變性",
+  )
+  kv(
+    "  RREF 類數（M_{2×3}(F_2) → F_2³ 的子空間）",
+    "RREF 秩 = \{@core.rank_mod(@canon.canon_rref(@core.mat_from_rows([[1, 1, 0], [0, 1, 1]]), 2), @core.mk_field(2))}；類數 15",
+  )
+  kv(
+    "  M_2(F_q) 的相似類數（q = 2, 3）",
+    "\{@canon.conjugacy_class_count(2, 2)},\{@canon.conjugacy_class_count(2, 3)}（= q²+q）",
+  )
+  kv(
+    "  圖規範形：P_4 vs K_{1,3} 同同構類？",
+    s2(
+      @canon.canon_graph(
+        @core.mat_from_rows([
+          [0, 1, 0, 0],
+          [1, 0, 1, 0],
+          [0, 1, 0, 1],
+          [0, 0, 1, 0],
+        ]),
+      ) ==
+      @canon.canon_graph(
+        @core.mat_from_rows([
+          [0, 1, 1, 1],
+          [1, 0, 0, 0],
+          [1, 0, 0, 0],
+          [1, 0, 0, 0],
+        ]),
+      ),
+    ),
+  )
+  let lens = @cellcx.cx_lens(5, 1, 7)
+  kv(
+    "  canon_cx：S² vs L(5,1) 同 canon？",
+    s2(@canon.canon_cx(@cellcx.cx_sphere(2, 7)) == @canon.canon_cx(lens)),
+  )
+  let g22 = @twist.grp([2, 2])
+  let nv = @twist.var_count(g22)
+  let seen : Array[Array[Int32]] = []
+  for code = 0; code < @core.int_pow(2, nv); code = code + 1 {
+    let v : Array[Int32] = []
+    let mut c = code
+    for i = 0; i < nv; i = i + 1 {
+      v.push(c % 2)
+      c = c / 2
+    }
+    if @canon.is_cocycle(g22, 2, v) {
+      let k = @canon.canon_cocycle(g22, 2, v)
+      let mut dup = false
+      for x in seen {
+        if x == k {
+          dup = true
+        }
+      }
+      if !dup {
+        seen.push(k)
+      }
+    }
+  }
+  kv(
+    "  上圈 canon 類數（(Z/2)², ℓ=2）",
+    "\{seen.length()}（= |H²|）",
+  )
+  let gl = @gauge.mk_lattice(3, 2)
+  let u0 = Array::make(2 * @gauge.lat_sites(gl), 0)
+  let lam0 = Array::make(@gauge.lat_sites(gl), 1)
+  kv(
+    "  曲率在規範變換下不變",
+    s2(
+      @canon.canon_gauge(gl, u0) ==
+      @canon.canon_gauge(gl, @gauge.gauge_transform(gl, u0, lam0)),
+    ),
+  )
+
+  println("")
+  println(
     "說明：每行都可重算；定理的精確陳述、證明與反例見 THEORY.md。",
   )
   println(
-    "完整驗證：moon test —— Total tests: 144, passed: 144, failed: 0。",
+    "完整驗證：moon test —— Total tests: 163, passed: 163, failed: 0。",
   )
 }

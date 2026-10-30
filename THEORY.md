@@ -8,7 +8,7 @@
 > ```
 > export PATH="$HOME/.moon/bin:$PATH"
 > moon check          # 全專案 0 errors, 0 warnings
-> moon test           # Total tests: 144, passed: 144, failed: 0
+> moon test           # Total tests: 163, passed: 163, failed: 0
 > moon run cmd/main   # 印出本檔所有數值結論的即時重算報告
 > ```
 >
@@ -1044,8 +1044,8 @@ moonc 因此判 `core` 未被使用）。改法是在測試內用 3 行確定性
 export PATH="$HOME/.moon/bin:$PATH"
 cd tensorlab
 moon check          # 0 errors, 0 warnings
-moon test           # Total tests: 144, passed: 144, failed: 0
-moon run cmd/main   # 163 行報告（新增 §19–§25 七個區段）
+moon test           # Total tests: 163, passed: 163, failed: 0
+moon run cmd/main   # 171 行報告（§19–§25 + §28 規範形）
 ```
 
 | 套件 | 測試數 | 主題 |
@@ -1061,6 +1061,7 @@ moon run cmd/main   # 163 行報告（新增 §19–§25 七個區段）
 | **ahss** | 6 | 分次代數、Sq³ 消失、扭曲 d₃、E₄ 計算 |
 | **dtensor** | 4 | 導出張量積：Koszul 分解、Tor = C(2g,i)、Künneth |
 | **xops** | 5 | 四結構交互定理 + Koszul 對偶（Ext vs Tor） |
+| **canon** | 19 | 逐結構規範形（完備性、冪等性、不變性） |
 
 ---
 
@@ -1095,3 +1096,73 @@ moon run cmd/main   # 163 行報告（新增 §19–§25 七個區段）
 
 * **[T-X-Koszul]（§25 追加）** Koszul 對偶的兩面：`Ext_{Λ(V)}(F_2,F_2)` 在 `(i,i)` 恆為 **1**（`@adams`），
   而 `Tor^{Sym(V)}_i(F_2,F_2)` 為 **C(2g,i)**（`@dtensor`）。兩個引擎、兩條路徑、互為見證。
+
+---
+
+## 28. 逐結構規範形化（`canon`）
+
+### 28.1 什麼叫「一個結構的規範形」
+
+對每個結構給三件事：
+
+* **(C1) 可計算的 canon**：一個函式 `canon(x)`，輸出可直接比較的整數鍵。
+* **(C2) 完備性**：`canon(x) = canon(y) ⟺ x ~ y`，其中 `~` 是**明寫出來的**等價關係
+  （列等價、么模等價、同格、相似、同構、等距、腿置換、二面體、上同調、規範、同倫…）。
+* **(C3) 不變性**：在 `~` 下不變；測試用**真正的重標號／共軛／換基**驗證，不是口頭聲明。
+
+兩條全域公理（每條測試都在驗）：
+`[Ax-Canon-Idem]` `canon(canon(x)) = canon(x)`；
+`[Ax-Canon-Complete]` 見 (C2) —— **不完備者一律如實標註，不假裝完備**。
+
+### 28.2 十九個結構的規範形總表
+
+| # | 結構 / 套件 | 規範形（演算法） | 等價關係 | 完備？ | 驗證方式 |
+|---|---|---|---|---|---|
+| 1 | 矩陣 over F_p（core） | **RREF**（`canon_rref`） | 列等價（同一列空間） | ✅ | `M_{2×3}(F₂)` 全 64 個矩陣 ⟹ 恰 **15** 類 = F₂³ 的子空間數 |
+| 2 | 整數矩陣（core） | **Smith 對角線**（`canon_snf`） | 么模等價 | ✅ | `diag(2,3) ~ diag(1,6)`、整除鏈 |
+| 3 | 整數**格**（core） | **Hermite 正規形**（`canon_hnf`） | 生成同一個格 | ✅ | 不同生成集同 canon；單列 `[6,9]` 的正規形就是它自己 |
+| 4 | 線性映射（spectral） | **共軛軌道最小元**（`canon_conj`，窮舉 GL_n） | 相似 | ✅ | `M₂(F_q)` 類數 = **q²+q**（`q=2→6`、`q=3→12`）；Σ類大小 = 16 |
+| 5 | 圖（spectral, metric） | **S_n 軌道最小元**（`canon_graph`） | 同構 | ✅（n ≤ 7） | P₄ ≠ K_{1,3}；旋轉標號同 canon |
+| 6 | 有限度量空間（metric） | 同上作用於距離矩陣（`canon_metric`） | 等距 | ✅ | 重標號不變；直線 vs 星形不同 |
+| 7 | 3-張量（tensor） | **腿置換 S₃ 最小元**（`canon_t3`） | S₃ 腿置換 | ✅（對 S₃） | 2×2×2 的 256 個張量：**canon 軌道數 = Burnside 值** |
+| 8 | 非交叉結構（nc） | **二面體 D_n 最小元**（`canon_dihedral`） | D_n 等價 | ✅ | 5 邊形族：軌道數 = Burnside 值；邊 ≠ 對角線 |
+| 9 | 2-上圈（twist） | **上同調類中字典序最小者**（`canon_cocycle`） | ω ~ ω+δ¹f | ✅ | `(Z/2)², ℓ=2`：相異 canon 個數 = `|H²| = 2³ = 8` |
+| 10 | 格點規範場（gauge） | **曲率場**（`canon_gauge`） | 規範變換 | ⚠️ **不完備** | 曲率不變（真驗）；環面上「平坦但 holonomy≠0」與零場同曲率卻不同軌道 |
+| 11 | 超結構（hyper） | 成員表（`canon_hyper`）／S_n 最小元（`canon_hyper_iso`） | 逐項相等／同構 | ✅／✅ | Z/4 ≠ V₄；非自同構置換造的同構副本 canon 相同 |
+| 12 | 關係記錄（relations） | **排序去重**（`canon_records`） | 集合相等 | ✅ | 次序與重複不影響 |
+| 13 | CW 複形（cellcx） | **每個邊界的 Smith 對角線**（`canon_cx`） | 逐度么模等價 | ⚠️ 不完備於同倫等價 | 換基（乘 −1）不變；S² ≠ L(5,1) ≠ L(7,1) |
+| 14 | 譜序列頁（ss, serre, adams） | `(r, dims, 每個 d_r 的 RREF)`（`canon_page`） | 逐格換基 | ✅ | `d ↦ Q d P⁻¹` 後 canon 不變 |
+| 15 | 分次代數（ahss） | **秩剖面** `dims + rank(cup[i][j])`（`canon_alg_profile`） | 逐度基變換 | ⚠️ 不變量，不完備 | `P_{i+j} C (P_i ⊗ P_j)` 後剖面不變 |
+| 16 | 凝聚鏈（condensed） | `dims + 每個過渡的 Smith`（`canon_chain`） | 逐層么模等價 | ⚠️ 不完備於鏈同構 | 換基不變；逆極限維數由它決定 |
+| 17 | 導出張量積（dtensor） | **Tor 雙次表**（`canon_tor`） | 表相等 | ✅ | 截斷 4 與 6 在低度數一致 |
+| 18 | site / 拓撲（grotop） | 偏序矩陣的 **S_n 最小元**（`canon_poset`） | 偏序同構 | ✅（n ≤ 7） | 換標號不變；鏈 ≠ V 形 |
+| 19 | 帳本（ledger） | 雜湊鏈 tip（既有 `ledger_tip`） | 逐項相同 | ✅（雜湊碰撞除外） | 篡改偵測（§17） |
+
+### 28.3 細化階梯（`[T-Canon-Ladder]`）
+
+同一批物件上有粗細不同的規範形，本檔逐條證明它們的**嚴格細化**關係：
+
+```
+canon_graph  ≻  canon_conj  ≻  char poly          （圖同構 ⟹ 相似 ⟹ 同特徵多項式）
+canon_cx     ≻  (Betti, 撓率)                     （Smith 資料決定同調，反之不成立）
+canon_snf    ≻  rank
+canon_page   ≻  dims
+canon_hnf    ≻  rank
+```
+
+* **`canon_conj ≻ char poly` 的嚴格性是算出來的**：`diag(1,1)` 與 `[[1,1],[0,1]]` 在 F₃ 上同特徵多項式
+  `(x−1)²`，但極小多項式不同 ⟹ `canon_conj` 不同。
+* **`canon_graph ≻ canon_conj`**：換標號是**置換**相似，置換 ⊂ GL，故 graph canon 相同蘊含 conj canon 相同；
+  在 3 個頂點的全部 8 張圖上逐對驗證了這個蘊含。
+
+### 28.4 這一節得到的**方法論**結論（比定理更有用）
+
+1. **定理要求的「前提」必須寫進測試，否則測試會假失敗**。二面體 Burnside 測試第一次給出
+   `軌道數 4 ≠ Burnside 3`：不是 Burnside 錯，而是我選的邊集族在 D₅ 下**不封閉**（Burnside 只對
+   G-不變的族有效）。修正族之後兩者一致。
+2. **用自同構做「重標號測試」會假通過**。對交換群 Z/4 用自同構 σ 重標號，乘法表**逐項不變**，
+   於是「同構但編碼不同」的斷言自動成立。改用**非自同構**置換後才真正測到東西。
+3. **不完備的規範形也要寫出來，並附見證**。曲率對環面規範場不完備：平坦但 holonomy≠0 的場
+   與零場同曲率、不同軌道（窮舉 `(Z/2)^9` 的 512 個規範變換確認零場軌道只有零場）。
+4. **規範形的代價是群作用窮舉**：`canon_conj` 是 `|GL_n(F_p)|`、`canon_graph` 是 `n!`，
+   所以每個函式都標明可算範圍（`n ≤ 3, p ≤ 3` / `n ≤ 7`），而不是假裝普遍可用。

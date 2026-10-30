@@ -233,3 +233,48 @@ moon test           # Total tests: 144, passed: 144, failed: 0
 
 逐包：core 10、tensor 12、nc 10、twist 8、radon 5、gauge 9、metric 6、evolve 7、hyper 7、spectral 12、
 ledger 7、relations 8、**cellcx 3、ss 5、serre 4、adams 5、grotop 6、condensed 5、ahss 6、dtensor 4、xops 5**。
+
+---
+
+## 7. 第四輪健檢（規範形化之後）
+
+### 7.1 除錯
+
+| # | 症狀 | 根因 | 修法 |
+|---|---|---|---|
+| 1 | `canon` 整包編譯不過（`Array<Int32>` 解析失敗 20+ 條） | 撰寫時把 `Array[...]` 誤打成 `Array<...>`；`Array` 是**型別別名**，不是泛型構造子 | 寫了一支括號正規化腳本（巢狀 `Array<Array<…>>` 正確展開），並在每批寫檔後掃 `Array<` 殘留 |
+| 2 | 巢狀 `Array[Array[Int32]]` 反覆退化成 `Array[Array[Int32]>` | 同上，`]]` 被吃掉一個 | 正規化腳本改成「迭代到不動點」，並用 `grep -c "Array<"` 當守門條件 |
+| 3 | `@core.det_mod(pm, p)` 型別錯誤 | `det_mod` 的參數是 `Field` 不是 `Int32` | 改 `det_mod(pm, @core.mk_field(p))` |
+| 4 | HNF 測試斷言 `[6,9]` 應化成 `[3,0]` 但得到 `[6,9]` | **測試前提錯**：單列的格就是 `Z·(6,9)`，化成 `[3,0]` 會改變格；gcd 只在**不同列之間**出現 | 改測「同格的不同生成集」與「`±` 正規化」 |
+| 5 | 二面體 Burnside 給出 `4 ≠ 3` | **測試前提錯**：Burnside 只對 **G-不變的族**成立，而我挑的邊集族在 D₅ 下不封閉 | 改成在 D₅ 下封閉的族（所有單邊 + 所有兩兩邊組合）後一致 |
+| 6 | 超結構「重標號」測試假通過 | 用**自同構**重標號時，交換群的乘法表逐項不變（內自同構平凡） | 改用**非自同構**置換 `σ(i)=i+1` 造同構副本 |
+| 7 | 分次代數秩剖面測試失敗（剖面全變 1） | 我造的 `P = I + E₀₁ + E₁₀` 在 F₂ 上**行列式為 0**（不是換基） | 改用剪切 `I+E₀₁`（det=1）與 3-循環置換（det=+1），並加 `det_mod = 1` 斷言 |
+| 8 | 凝聚鏈換基測試 panic／Smith 亂掉 | 源端維度是 4，卻用 2×2 的 `P` | 源端改用 4×4 剪切 |
+| 9 | 胞腔複形測試 panic | `cx_sphere(2,7)` 的 `∂₂` 是 0×1（空矩陣），取 `data[0]` 越界 | 改用 `cx_lens(5,1,7)`（邊界非零），且只做整數么模（×(−1)）變換 |
+| 10 | 軌道大小總和 20 ≠ 16 | `orbit_size_conj` 數的是「置換的個數」而不是「相異共軛矩陣的個數」 | 加去重（依展平鍵），總和回到 16 |
+
+### 7.2 一條方法論判準（寫進 THEORY §28.4）
+
+> **當定理與測試衝突時，先查測試的前提。**
+> 第 4、5、6 條全部不是程式錯，而是「我以為的等價關係」比真正的等價關係更粗/更細。
+> 這正好說明規範形的價值：它把「等價」寫成可執行的一行 `==`，讓錯誤前提立刻暴露。
+
+### 7.3 去重與減債
+
+* 排序邏輯統一：`moved_flat`（二面體）與 `canon_records` 共用插入排序寫法；`lex_cmp` / `lex_less` 是唯一的比較器。
+* `canon_hyper` / `canon_hyper_iso` 共用成員表走訪；`canon_metric` 直接複用 `canon_graph`（距離矩陣與鄰接矩陣的置換作用相同）。
+* `canon_page` 用 `canon_rref`，`canon_poset` 用 `canon_graph`，`canon_cx` / `canon_chain` 用 `smith_diagonal` —— 三者都是既有引擎，沒有重寫一次消元。
+
+### 7.4 重跑
+
+```sh
+export PATH="$HOME/.moon/bin:$PATH"
+cd tensorlab
+moon clean && moon check     # 0 errors, 0 warnings
+moon test                    # Total tests: 163, passed: 163, failed: 0
+moon run cmd/main            # 171 行（新增 §28 區段）
+```
+
+逐包：core 10、tensor 12、nc 10、twist 8、radon 5、gauge 9、metric 6、evolve 7、hyper 7、spectral 12、
+ledger 7、relations 8、cellcx 3、ss 5、serre 4、adams 5、grotop 6、condensed 5、ahss 6、dtensor 4、xops 5、
+**canon 19**。

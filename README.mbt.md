@@ -32,6 +32,7 @@ condensed      profinite 層級鏈、Z[S]^■、Ext 消失證書、固態性缺�
 ahss           分次代數上的扭曲 Atiyah–Hirzebruch 譜序列（d₃ = Sq³ + H∪）
 dtensor        導出張量積：Koszul 自由分解、Tor = Λ 在 2g 生成元上、Künneth
 xops           交叉運算：H³ 可見性、並的可加性、非交叉森林 site、twist 黏合障礙
+canon          逐結構規範形：RREF/Smith/HNF/共軛軌道/圖同構/二面體/上同調/曲率…（完備性逐條標註）
 cmd/main       報告產生器（即時重算 THEORY.md 的數值結論）
 ```
 
@@ -40,8 +41,8 @@ cmd/main       報告產生器（即時重算 THEORY.md 的數值結論）
 ```sh
 export PATH="$HOME/.moon/bin:$PATH"
 moon check          # 0 errors, 0 warnings
-moon test           # Total tests: 144, passed: 144, failed: 0
-moon run cmd/main   # 163 行即時重算報告
+moon test           # Total tests: 163, passed: 163, failed: 0
+moon run cmd/main   # 171 行即時重算報告
 ```
 
 單套件測試請在**根目錄**執行：
@@ -49,15 +50,15 @@ moon run cmd/main   # 163 行即時重算報告
 `core | tensor | nc | twist | gauge | radon | metric | evolve | hyper | spectral | ledger | relations | cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops`
 （在套件目錄內跑 `moon test` 會跑整個專案，數字是累計值。）
 
-## 測試分佈（144）
+## 測試分佈（163）
 
 | core | tensor | nc | twist | gauge | radon | metric | evolve | hyper | spectral | ledger | relations |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 10 | 12 | 10 | 8 | 9 | 5 | 6 | 7 | 7 | 12 | 7 | 8 |
 
-| cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops |
-|---|---|---|---|---|---|---|---|---|
-| 3 | 5 | 4 | 5 | 6 | 5 | 6 | 4 | 5 |
+| cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops | canon |
+|---|---|---|---|---|---|---|---|---|---|
+| 3 | 5 | 4 | 5 | 6 | 5 | 6 | 4 | 5 | 19 |
 
 ## 注意
 

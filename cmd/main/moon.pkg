@@ -19,6 +19,7 @@ import {
   "username/tensorlab/condensed",
   "username/tensorlab/ahss",
   "username/tensorlab/xops",
+  "username/tensorlab/canon",
 }
 
 pkgtype(kind: "executable")

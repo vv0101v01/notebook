@@ -1,0 +1,88 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/canon"
+
+import {
+  "username/tensorlab/ahss",
+  "username/tensorlab/cellcx",
+  "username/tensorlab/condensed",
+  "username/tensorlab/core",
+  "username/tensorlab/dtensor",
+  "username/tensorlab/gauge",
+  "username/tensorlab/grotop",
+  "username/tensorlab/hyper",
+  "username/tensorlab/nc",
+  "username/tensorlab/relations",
+  "username/tensorlab/ss",
+  "username/tensorlab/twist",
+}
+
+// Values
+pub fn canon_alg_profile(@ahss.Alg) -> Array[Int32]
+
+pub fn canon_chain(@condensed.Chain) -> Array[Int32]
+
+pub fn canon_cocycle(@twist.Grp, Int32, Array[Int32]) -> Array[Int32]
+
+pub fn canon_conj(@core.Mat, Int32) -> Array[Int32]
+
+pub fn canon_cx(@cellcx.CellCx) -> Array[Int32]
+
+pub fn canon_dihedral(Int32, Array[@nc.Chord]) -> Array[Int32]
+
+pub fn canon_gauge(@gauge.Lattice, Array[Int32]) -> Array[Int32]
+
+pub fn canon_graph(@core.Mat) -> Array[Int32]
+
+pub fn canon_hnf(@core.Mat) -> @core.Mat
+
+pub fn canon_hyper(@hyper.Hyper) -> Array[Int32]
+
+pub fn canon_hyper_iso(@hyper.Hyper) -> Array[Int32]
+
+pub fn canon_metric(@core.Mat) -> Array[Int32]
+
+pub fn canon_page(@ss.Page) -> Array[Int32]
+
+pub fn canon_poset(@grotop.Site) -> Array[Int32]
+
+pub fn canon_records(Array[@relations.Rec]) -> Array[Int32]
+
+pub fn canon_rref(@core.Mat, Int32) -> @core.Mat
+
+pub fn canon_rref_same(@core.Mat, @core.Mat, Int32) -> Bool
+
+pub fn canon_snf(@core.Mat) -> Array[Int32]
+
+pub fn canon_t3(Array[Int32], Int32) -> Array[Int32]
+
+pub fn canon_tor(@dtensor.PolyAlg, Int32, Int32) -> Array[Int32]
+
+pub fn concat_arr(Array[Int32], Array[Int32]) -> Array[Int32]
+
+pub fn conjugacy_class_count(Int32, Int32) -> Int32
+
+pub fn dihedral_fixed(Int32, Array[@nc.Chord], Int32, Int32) -> Bool
+
+pub fn dihedral_orbits(Int32, Array[Array[@nc.Chord]]) -> (Int32, Int32)
+
+pub fn flatten(@core.Mat) -> Array[Int32]
+
+pub fn is_cocycle(@twist.Grp, Int32, Array[Int32]) -> Bool
+
+pub fn lex_cmp(Array[Int32], Array[Int32]) -> Int32
+
+pub fn lex_less(Array[Int32], Array[Int32]) -> Bool
+
+pub fn orbit_size_conj(@core.Mat, Int32) -> Int32
+
+pub fn perm_conj_mat(@core.Mat, Array[Int32]) -> @core.Mat
+
+pub fn perms(Int32) -> Array[Array[Int32]]
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

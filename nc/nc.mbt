@@ -562,8 +562,7 @@ pub fn mst_weight(w : Array[Array[Int32]], n : Int32) -> (Int32, Array[Chord]) {
   best[0] = 0
   let mut total = 0
   let edges : Array[Chord] = []
-  for rep = 0; rep < n; rep = rep + 1 {
-    let _ = rep
+  for _step = 0; _step < n; _step = _step + 1 {
     let mut u = -1
     let mut bu = 1_000_000_001
     for i = 0; i < n; i = i + 1 {
@@ -679,8 +678,7 @@ pub fn strict_monotone(f : Array[Int32]) -> Bool {
 /// /// (b) 它同時是無約束的最小生成樹；故非交叉約束不損最佳性。
 pub fn nc_freedom_gap(f : Array[Int32], n : Int32) -> (Int32, Int32) {
   let w = cyclic_weights(f, n)
-  let (mw, medges) = mst_weight(w, n)
-  let _ = medges
+  let (mw, _medges) = mst_weight(w, n)
   let mut best = 1_000_000_000
   for t in enumerate_nc_trees(n) {
     let mut s = 0

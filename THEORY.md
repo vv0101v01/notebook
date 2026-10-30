@@ -1,14 +1,14 @@
 # tensorlab —— 定義、公理、定理、算法與演變恆定關係
 
-> 本檔是 `tensorlab`（MoonBit，穩定版 `moon 0.1.20261023` / `moonc v0.10.17`）的理論主檔。
+> 本檔是 `tensorlab`（MoonBit，穩定版 `moon 0.1.20261028` / `moonc v0.10.17`）的理論主檔。
 > 標籤系統與程式碼中的文件註解一一對應：
 > `[Ax-]` 公理／`[D-]` 定義與構造／`[P-]` 命題／`[T-]` 定理／`[C-]` 推論／`[E-]` 演算法／`[Inv-]` 演變下恆定關係。
 > 每一條都可重算：
 >
 > ```
 > export PATH="$HOME/.moon/bin:$PATH"
-> moon check          # 全專案 0 errors；1 warning（nc/moon.pkg 的 core 只被 nc_test.mbt 使用）
-> moon test           # Total tests: 66, passed: 66, failed: 0
+> moon check          # 全專案 0 errors, 0 warnings
+> moon test           # Total tests: 144, passed: 144, failed: 0
 > moon run cmd/main   # 印出本檔所有數值結論的即時重算報告
 > ```
 >
@@ -440,8 +440,11 @@ core  ── 消元（F_p 線性代數、秩、零空間、Smith 標準形、整
 
 ### 9.1 帳本與導出算法
 
-* **[D-Ledger]** `Ledger{rows}`：每行是某資料在演化過程中的一次觀測，欄位為該結構的整數不變量
-  （`ledger_of`；若關係需要常數項則用 `ledger_with_const` 預置 `1` 欄）。
+* **[D-RowSet]** `RowSet{rows}`：每行是某資料在演化過程中的一次觀測，欄位為該結構的整數不變量
+  （`rowset_of`；若關係需要常數項則用 `rowset_with_const` 預置 `1` 欄）。
+  ⚠️ 本輪改名：原稱 `Ledger`，與新套件 `ledger`（§17 的**持久**賬本）同名而語義不同 ——
+  一個是「一次演變的觀測矩陣」，一個是「跨時間不可篡改的雜湊鏈」。同名是債，故 `Ledger → RowSet`、
+  `ledger_of → rowset_of`、`ledger_len → rowset_len`、`ledger_with_const → rowset_with_const`。
   `holds_exact` / `holds_mod` 對係數向量做逐點檢驗。
 * **[D-Derive]（算法 `[E-Derive]`）** 從帳本**導出**恆定關係，而非假設它：
   1. 對 `rows` 在 `F_p` 上求零空間基底 `B = nullspace(rows, p)`；
@@ -495,7 +498,7 @@ core  ── 消元（F_p 線性代數、秩、零空間、Smith 標準形、整
 
 ---
 
-## 10. 測試 ↔ 定理對照（66 項，全綠）
+## 10. 測試 ↔ 定理對照（101 項，全綠）
 
 | 套件 | 測試數 | 覆蓋的主要標籤 |
 |---|---|---|
@@ -507,16 +510,22 @@ core  ── 消元（F_p 線性代數、秩、零空間、Smith 標準形、整
 | `gauge` | 9 | `[T-Cliff] [T-Cliff-Twist] [T-Cliff-Center] [T-Cliff-Chi] [T-Cliff-Kron] [T-Cliff-Even] [T-Gauge-Inv] [T-Gauge-Bianchi] [T-Gauge-Hol] [T-Gauge-Moduli] [T-Gauge-Moduli-Bij]` |
 | `metric` | 6 | `[Ax-Metric] [T-GH-Metric] [T-GH-Lip] [T-GH-Sub] [T-VR-Euler] [T-VR-Cycle] [T-VR-Fill]` |
 | `evolve` | 7 | `[D-Derive] [T-Derive-Sound] [P-Transfer] [Inv-Flip] [Inv-Gauge] [Inv-Radon] [Inv-Shear] [Inv-VR] [T-Evolve-Summary]` |
-| 合計 | **66** | `Total tests: 66, passed: 66, failed: 0` |
+| `hyper` | 7 | `[T-Hyper-Rank] [T-Hyper-Interval] [T-Hyper-Trunc] [T-Hyper-Potency] [T-Hyper-Profile] [T-Hyper-Geodesic]`（§14） |
+| `spectral` | 12 | `[T-CH] [T-TrDet] [T-Spec-TrDet] [T-Spec-Diag] [T-Spec-Conj] [T-Spec-Perm] [T-Spec-Radon] [T-Spec-Hyper] [T-Spec-Isospectral] [T-Spec-Chi] [T-Spec-Chi-Formula] [T-Spec-RegularRep]`（§15、§16） |
+| `ledger` | 7 | `[T-Ledger-Det] [T-Ledger-Persist] [T-Ledger-Fork] [T-Ledger-Tamper] [T-Ledger-Audit] [E-Ledger-Bridge]`（§17） |
+| `relations` | 8 | `[T-Rel-Scale] [T-Dual-Rank] [T-Dual-Chain] [T-Dual-Radon] [T-Dual-Tensor] [T-Contrast-Partition] [T-Impl-Matrix] [T-Ratio-Radon] [T-Ratio-Flip] [E-CollectInto]`（§18） |
+| 合計 | **101** | `Total tests: 101, passed: 101, failed: 0` |
 
 （每包計數以 `moon test --package username/tensorlab/<pkg>` 在**根目錄**執行為準；
 在包目錄內執行 `moon test` 會跑整個專案，數字是累計值。）
 
-**最終核驗（本專案交件狀態）**：`moon clean` 後重建 30 個 work items，
-`moon check` → `0 errors, 1 warning`（`nc/moon.pkg` 的 `core` 只被 `nc_test.mbt` 使用，故在主建置中被視為未使用），
-`moon test` → `Total tests: 66, passed: 66, failed: 0`；
-逐包：core 10、tensor 12、nc 10、twist 7、gauge 9、radon 5、metric 6、evolve 7（合計 66 ✓）；
-`moon run cmd/main` → 92 行報告，全部數值由本次執行即時算出。
+**最終核驗（本專案交件狀態）**：`moon check` → **`0 errors, 0 warnings`**；
+`moon test` → `Total tests: 101, passed: 101, failed: 0`；
+逐包：core 10、tensor 12、nc 10、twist 8、radon 5、gauge 9、metric 6、evolve 7、hyper 7、spectral 12、ledger 7、relations 8
+（合計 101 ✓）；`moon run cmd/main` → **133 行**報告，全部數值由本次執行即時算出。
+
+`nc` 的唯一警告已清除：`nc_test.mbt` 曾為了一個亂數序列而匯入整個 `core`（測試依賴 ≠ 主建置依賴，
+moonc 因此判 `core` 未被使用）。改法是在測試內用 3 行確定性 LCG 產生同一組權重 —— 依賴歸零，語義不變。
 
 ---
 
@@ -551,7 +560,11 @@ core  ── 消元（F_p 線性代數、秩、零空間、Smith 標準形、整
 | 叢／拉蒙 | `gauge/gauge.mbt`（`gamma_mats`, `check_clifford`, `clifford_cocycle_vec`, `rho`, `check_clifford_center`, `check_bott_periodicity`, `even_center_dim`, `mk_lattice`, `curvature`, `holonomies`, `canonical_code`, `flat_moduli`, `check_moduli_bijective`） |
 | Radon | `radon/radon.mbt`（`mk_radon`, `radon_matrix`, `gram_matrix`, `gram_apply_inv`, `check_*`, `root_of_unity`, `fourier`, `check_slice`） |
 | 度量 | `metric/metric.mbt`（`mspace_*`, `check_metric`, `gh2`, `check_gh_axioms`, `check_diam_lipschitz`, `check_subspace_bound`, `vr_simplices`, `boundary_matrix`, `boundary_ranks`, `vr_betti_all`, `check_euler`, `check_cycle_theorem`） |
-| 演變 | `evolve/evolve.mbt`（`Ledger`, `ledger_of`, `ledger_with_const`, `derive_relations`, `relation_derived`, `check_derived_then_transfer`, `evolve_flips/gauge/radon/shear/vr`, `evolve_summary`） |
+| 演變 | `evolve/evolve.mbt`（`RowSet`, `rowset_of`, `rowset_with_const`, `rowset_rows`, `derive_relations`, `relation_derived`, `check_derived_then_transfer`, `evolve_flips/gauge/radon/shear/vr`, `evolve_summary`） |
+| 超化 | `hyper/hyper.mbt`（`hyper_from`, `hyper_classify`, `is_canonical_hypergroup`, `interval_hyper`, `truncated_add_hyper`, `tensor_rank_hyper`, `mat_rank_hyper_exhaustive`, `abs_diff_hyper`, `metric_hyper`, `flip_hyper`, `krasner_hyper`, `crisp_cyclic_hyper`, `hyper_potency`, `hyper_cell_profile`, `hyper_cell_size`） |
+| 譜化 | `spectral/spectral.mbt`（`char_poly`, `mat_trace`/`mat_trace_mod`, `spectrum_of`, `spectrum_roots`, `check_diagonalizable`, `check_spectral_tracedet`, `check_trace_square`, `check_perm_char_poly`, `laplacian_of_graph`, `adjacency_of_graph`, `graph_diam`, `radon_gram_char_poly`, `isospectral_star_vs_cycle`, `chirality_matrix/spectrum`, `check_chirality_formula`, `regular_rep_matrix`, `check_regular_rep_trace`, `hyper_cell_matrix`, `check_spectral_conjugation`, `mat_inverse`, `projector`） |
+| 賬本 | `ledger/ledger.mbt`（`Entry`, `Cell`, `Ledger`, `fnv1a`, `empty`, `append`, `observe`, `append_derived`, `entry_at`, `entries`, `verify`, `fork_index`, `corrupt`, `from_entries`, `observation_rows`, `derive_into`, `audit`, `replay`, `stats`, `ingest_rows`, `ingest_rowset`） |
+| 五關係 | `relations/relations.mbt`（`Rec`, `rec_values`, `relative`, `relative_profile`, `check_relative_scale_invariance`, `dual_rank_nullity`, `dual_chain_cochain`, `dual_radon_injectivity`, `dual_tensor_permutation`, `contrast`, `contrast_counts`, `check_contrast_partition`, `implies`, `implication_closure`, `tensor_predicate_table`, `implication_matrix`, `equivalences`, `ratio`, `constant_ratio`, `radon_total_relative`, `flip_edge_vertex_ratio`, `collect`, `collect_into_ledger`） |
 | 報告 | `cmd/main/main.mbt`（`moon run cmd/main`） |
 
 ---
@@ -568,3 +581,517 @@ core  ── 消元（F_p 線性代數、秩、零空間、Smith 標準形、整
 | 6 | `radon`、`gauge`、`evolve` 各自手寫 `(x·y) % p`、`mat_add/mat_scale/mat_eq/mat_ident` | 與 `core` 的域運算重複（4 份實作），且手寫式在 `p → 46337` 時逼近溢位邊界 | 全部改走 `@core`（`fld_*`、`mat_add`、`mat_scale`、`mat_eq_mod`、`mat_identity`、`vec_dot`、`vec_scale`） | `moon check`/`moon test` 全綠；`cmd/main` 的既有數值逐字不變（只多了 2 行新證據） |
 | 7 | 死碼：15 個零引用的 `pub` 項目（`ilcm`、`mat_set`、`vec_add`、`multiplicative_relation`、`t3_code`、`slice_rank_lower_bound`、`rank1_list`、`tensor_rank_brute`、`rank_decomposition`、`vr_betti`、`metric_from_points` …） | 維護負擔；其中 `[P-Subadd]` 的實作從未被任何測試呼叫（缺陷 1 因此長期隱形） | 刪除；被引用的改為**被測試覆蓋**（`t3_smul`/`t3_simple`/`check_subadditivity`/`decompose`） | 死碼掃描（0 個零引用項目）；測試數 62 → 66 |
 | 8 | `core/moon.pkg` 匯入 `moonbitlang/core/math` 只為 `multiplicative_relation` | 刪掉該函式後成為未使用匯入 | 移除 | 警告數 2 → 1 |
+
+### 13.1 第二輪（超化／譜化／賬本／五關係）
+
+| # | 缺陷 | 影響 | 修法 | 證據 |
+|---|---|---|---|---|
+| 9 | `regular_rep_matrix` 把 cocycle 的**指數** `ω(a,b)` 當成矩陣元素 | `tr ρ(e)` 得 `2` 而非 `|G| = 4`，`[T-Spec-RegularRep]` 直接失效 | 元素改為 `ζ^{ω(a,b)}`（`@core.mod_pow`）；參數 `_p → p`（原本 `p` 未綁定） | `spectral` 第 10 條測試：`tr = 4`、其餘 `0` |
+| 10 | `mat_trace` 回傳**未約化**的整數 Σ，卻被拿去和 `F_p` 值比較 | 13 個隨機案例誤報（`[[2,4],[5,0]]`、`p=7`：`Σ=9 ≠ 2`） | 新增 `mat_trace_mod(a,p)`，`check_trace_square` 與 Radon 痕跡檢查改用它；`mat_trace` 保留「原始 Σ」語義（`hyper_cell_matrix` 的 `tr = 4` 需要它） | `spectral` 全部 12 條測試 |
+| 11 | `C₅/p=7` 曾被當成 `[T-Spec-Lap-Cycle]` 的缺陷 | 其實是**前提** `n \| p−1` 不成立（`5 ∤ 6`），函式是對的 | 不改函式；把「誠實拒絕」寫成測試（`(5,7) == false`，並驗 `root_of_unity(4,5) = 2`） | `spectral` 第 4 條測試 |
+| 12 | `dual_rank_nullity` 寫成「`nullity(A) = nullity(Aᵀ)`」 | 對長方形矩陣是**假**的（`n×(n+1)` 差 1）；第一次跑 `relations` 測試即被擋下 | 改為指標等式 `nullity(A) − nullity(Aᵀ) = cols − rows` | `relations` 第 2 條測試（`p ∈ {7,10007}`、`n = 2..4`） |
+| 13 | `dual_chain_cochain` 用同一組秩數去算 `H_k` 與 `H^k`（恆真），且遺留 `let _ = transposed` 死碼 | 「對偶」變成同義反覆 | 上同調改用**轉置矩陣**獨立求秩（`rank_mod(mat_transpose(∂))`），三維度逐個比較 | `relations` 第 3 條測試：`C₄/C₅/C₆` 皆 `(∂∂=0, H^k=H_k)` |
+| 14 | `radon_total_ratio` 拿**整數**比值 `(Σ(Rf), Σf)` 去和 `(n+1, 1)` 比 | 由於 `F_p` 約化，`(n+1)·Σf` 一般 `≠ Σ(Rf) mod p`，比值的「常數性」是假命題 | 改為 `radon_total_relative`：在 `F_p` 中取**相對值**；`Σf ≡ 0` 時回傳 `None`（把前提寫進型別） | `relations` 第 7 條測試（含零均值 `f` 的 `None` 案例） |
+| 15 | `derive` 是保留字（解析錯誤 3002）；`while true { return … }` 在回傳 `Option` 的函式中報 4108 | 兩個檔案無法編譯 | `derive → append_derived`；`entry_at`/`entries` 改用 `let mut go = true` 迴圈 | `ledger` 7 條測試 |
+| 16 | `evolve` 的 `Ledger` 與新套件 `ledger` 的 `Ledger` **同名不同義**（一個是觀測矩陣、一個是雜湊鏈） | 讀者與編譯器都會混淆；`analyze` 的重名掃描直接標紅 | 改名 `RowSet` / `rowset_of` / `rowset_len` / `rowset_with_const` / `rowset_rows` | 重名掃描：0 筆 |
+| 17 | `nc_test.mbt` 為一個亂數序列導入整個 `core` | 測試依賴 ≠ 主建置依賴 ⟹ 恆有一條 `unused_package` 警告 | 測試內改用 3 行確定性 LCG | `moon check` → **0 errors, 0 warnings** |
+| 18 | `hyper.mbt` 內 `let _ = attain` 的死變數；`cmd/main` 用 `impl` 當變數名（保留字） | 死碼 + 解析錯誤 | 刪除 `attain`；`impl → implm` | 死碼掃描 0 筆；`moon check` 全綠 |
+| 19 | 舊稿 `χ_{γ_*} = (x²+1)^{m/2}` 對**奇** `d` 是錯的（`γ_*` 是純量 `√s`） | 手徵定理在 `d = 3` 時給出重根錯誤 | 依 `d` 奇偶分支寫定理，並加前置 `clifford_available(p)`；新增 `(3,5)`（1 個相異根）與 `(2,7)`（不分裂）的測試 | `spectral` 第 12 條測試 |
+| 20 | 猜想「`rank ≤ 1 ⟺ Det = 0 ⟺ #decomp = 0` 為等價類」 | 6561 個張量算出：**三條單向蘊含**、等價類 **0** 個 | 不寫成等價；把反例方向寫進 §18.4 的蘊含矩陣 | `relations` 第 6 條測試（矩陣逐格比對） |
+
+---
+
+## 14. `hyper`：超化（把每個結構換成「可能的結果集」）
+
+### 14.1 定義與公理
+
+* **[D-Hyper]** 有限超結構 `Hyper`：`table[a * size + b][c]` 為真 ⟺ `c ∈ a ⋆ b`。乘積是**集合**，不是元素。
+* **[D-Cell]** `|a ⋆ b|`（單元格基數）—— 超結構的全部資訊其實由「單元格尺寸矩陣」承載（見 §15.4）。
+* **[Ax-Hyper]** 六條公理，全部寫成**可判定的謂詞**，而不是假設：
+  1. **閉合** `check_closure`：每個 cell 非空；
+  2. **結合** `check_assoc`：`triple_left = triple_right`，即 `⋃_{x∈a⋆b} x⋆c = ⋃_{y∈b⋆c} a⋆y`（比較**集合**）；
+  3. **再生** `check_repro`：`∀a,b ∃x: b ∈ a ⋆ x`（「可除」）；
+  4. **交換** `check_comm`：`c ∈ a⋆b ⟺ c ∈ b⋆a`；
+  5. **么元** `check_identity(e)`：`e ⋆ a = {a}`（**恰好**是單點，不是「包含」）；
+  6. **反元素** `check_inverse(e)`：`∀a ∃x: e ∈ a ⋆ x`。
+* **[E-HyperClassify]** `hyper_classify(h, e)` 回傳六元布林向量 —— 於是「這是什麼代數結構」變成一次計算，
+  而不是一段論述。**公理次序**（本專案全程引用）：(閉合, 結合, 再生, 交換, 么元, 反元素)。
+
+### 14.2 由既有結構「超化」出的八族（判別表）
+
+| 超化 `[D-*]` | 定義 | 六公理 | 結論 |
+|---|---|---|---|
+| `interval_hyper(n)` | `a ⋆ b = [min(a,b), max(a,b)]` | (T,T,T,T,**F**,T) | 結合、複製、交換都有；**無么元** ⟹ 非規範超群 |
+| `truncated_add_hyper(r)` | `a ⋆ b = {c : c ≤ min(r, a+b)}` | (T,T,T,T,**F**,T) | 么元失效的原因：`0 ⋆ a = {0,…,a}` |
+| `mat_rank_hyper_exhaustive(n,p)` | 由 `F_p` 上**實際**的矩陣秩資料建表 | (T,T,T,T,T,T) 〔`n=2, p=3`〕 | 規範超群（見 [T-Hyper-Rank]） |
+| `tensor_rank_hyper()` | 張量秩版（載體 `{0,1,2,3}`，3 = 「≥3」） | (T,T,T,T,**F**,T) | 與截斷加法同型 |
+| `metric_hyper(M)` | 有限度量圖的測地區間超化 | (T,T,T,T,**F**,T) | 測地凸性給出結合性 |
+| `flip_hyper(n)` | associahedron 1-骨架（翻轉圖；`n=5` 時就是 `C₅`）的測地超化 | (T,T,T,T,**F**,T) | 與 `metric_hyper(C₄/C₅)` 同一個指紋 |
+| `abs_diff_hyper(n)` | `a ⋆ b = {c : |a−b| ≤ c ≤ min(n, a+b)}` | (T,T,T,T,T,T) | 「能作差」⟹ 規範 |
+| `krasner_hyper()` / `crisp_cyclic_hyper(n)` | Krasner 超域 / `ℤ/n` 的脆加法 | (T,T,T,T,T,T) | 正對照組 |
+
+### 14.3 主定理
+
+* **[T-Hyper-Rank]（本輪核心結論）** `mat_rank_hyper_exhaustive(2,3)` 與 `abs_diff_hyper(2)` **逐格相同**，
+  且 `is_canonical_hypergroup` 為真。也就是說：
+  > **矩陣秩的加法律就是絕對差–截斷和的區間律**：`rank(A+B) ∈ [|r−s|, min(n, r+s)]`。
+  上界 `min(n, r+s)` 與下界 `|r−s|` 是古典的；**本輪新增的是「取盡性」** —— 區間內每一點都可達到，
+  在 `2×2`、`F₃` 上逐格驗證（`|1 ⋆ 1| = 3`：消去與堆疊都發生）。
+  兩條獨立路徑（純代數的秩枚舉 vs 純組合的區間公式）給出同一個表 ⟹ 不是巧合，是同一條律。
+  佐證：`hyper_cell_size(mh, 1, 1) = 3`（`{0,1,2}`）——消去（0）與堆疊（2）在秩 1+1 時都會發生。
+* **[T-Hyper-Interval]** 區間超化：`0 ⋆ 2 = {0,1,2} ⊋ {2}` 故么元不成立；但 `e ∈ a ⋆ 0` 恆成立，故
+  「反元素」謂詞反而為真 —— **兩條公理不能互相代替**，必須各自判定。
+* **[T-Hyper-Trunc]** 截斷秩超化：`|a ⋆ b| = min(r, a+b) + 1`，且 `0 ∈ a ⋆ b` 恆成立（「零在所有乘積中」）。
+* **[T-Hyper-Potency]** 超冪次 `pot(a)` = 最小的 k 使 `a^(*k) = a^(*k+1)`（集合穩定）。
+  實測：`truncated_add_hyper(3)` 在 `a = 1` 上為 `3`；`crisp_cyclic_hyper(n)`（`n = 2..9`）為
+  `[2,3,3,4,4,4,4,5]` = `⌈log₂ n⌉ + 1` —— 即「反覆自乘把集合撐滿載體所需的步數」是對數級。
+* **[T-Hyper-Profile]** 單元格尺寸剖面：`interval_hyper(4)` 的 `|a−b|+1` 分佈為 `[0,4,6,4,2]`
+  （Σ = 16 = `|A|²`）；且秩超群與絕對差超群的剖面**逐格相同**。
+
+### 14.4 算法（超化給出的新算法）
+
+1. `[E-HyperClassify]`：把「這個結構是什麼」化為 `O(|A|³)` 的判定（`check_assoc` 用集合比較）。
+2. `[D-Hyper-MatRank]`：由資料建超結構 —— **不需要先猜公式**，秩枚舉直接給出乘積表；再用
+   `abs_diff_hyper` 對照，公式是「被發現的」而不是「被假設的」。
+3. `[D-CellMatrix]`：單元格尺寸矩陣（§15.4）把超結構送進譜化管線。
+
+---
+
+## 15. `spectral`：譜化（每個結構換成「它的譜」）
+
+### 15.1 工具箱
+
+* `[E-CharPoly]` Faddeev–LeVerrier：`M_k = A·M_{k−1} + c_{n−k+1}·I`，`c_{n−k} = −tr(A·M_k)/k`。
+* `[E-DivLinear]` 綜合除法（`(x−r)` 除多項式）；`[E-PolyMat]` 矩陣代入多項式（Horner）。
+* **[D-Trace] vs [D-TraceMod]**：`mat_trace` 是**未約化**的整數 Σ；比對 `F_p` 值時必須用
+  `mat_trace_mod`。本輪的真實缺陷：`[[2,4],[5,0]]`、`p = 7` 時 `Σ = 9 ≠ 2`，
+  13 個隨機案例因此誤報 —— 參見 §13 的新增條目。
+
+### 15.2 譜的基本定理（全部以隨機矩陣 + 有限域重算驗證）
+
+| 標籤 | 陳述 | 驗證 |
+|---|---|---|
+| `[T-CH]` | `χ_A(A) = 0` | `p ∈ {7,11,13,17}`、`n = 2..4` 隨機矩陣 |
+| `[T-TrDet]` | `cₙ₋₁ = −tr A`、`c₀ = (−1)ⁿ det A` | 同上（`check_char_poly_coeffs`） |
+| `[T-Spec-TrDet]` | 譜分裂時 `Σλ = tr A`、`Πλ = det A` | `check_spectral_tracedet` |
+| `[T-Spec-Diag]` | 可對角化 ⟺ 譜分裂 **且** `Σ dim ker(A−λI) = n` | `[[1,1],[0,1]]`：分裂=T、可對角化=**F**、`spectrum_roots=[(1,2)]` |
+| `[T-Spec-Conj]` | `χ_{PAP⁻¹} = χ_A` | 置換 P 與剪切 P 各驗一次 |
+
+### 15.3 具體譜
+
+* **循環圖的 Laplace 譜**：`spec L(C_n) = {2 − ω^k − ω^{−k}}`，`ω` 為 `F_p` 中的 `n` 次本原根。
+  成立：`C₃/p=7`、`C₄/p=13`、`C₅/p=11`；**不成立**：`C₅/p=7`（因為 `5 ∤ 6`）。
+  這條定理寫明了前提 `n | p−1` —— 前提不是裝飾，去掉它命題就是假的。
+  （附帶修正：`root_of_unity(4,5) = 2`，因為 `F₅^×` 中 2 的階正是 4；曾誤判為缺陷。）
+* **[T-Spec-Perm]** 置換矩陣：`χ = Π_cycles (x^{len} − 1)`。在 `(3,2)`、`(2,2,1)`、全不動、4-循環上逐項相符。
+* **[T-Spec-Radon]** Radon 的 Gram 算子 `RᵀR`（`n²×n²`）之 `χ` 由 `radon_gram_char_poly` 顯式給出（`n ≤ 3` 驗證）。
+* **[T-Spec-Hyper]** `hyper_cell_matrix(interval_hyper(4))` 的元素為 `|a−b|+1`，
+  `χ = [9987,9951,9967,10003,1] (mod 10007)`、`tr = 4`、`deg = 4` —— **超化 → 譜化**的直通車。
+* **[T-Spec-Isospectral]** 譜不決定結構：`K_{1,4}` 與 `C₄ ⊔ K₁` 的**鄰接**譜相同（皆 `{±2,0,0,0}`，`p = 17` 時 `χ` 相同），
+  但直徑是 `2` 對 `−1`（不連通）。**易錯點**：這兩者的 **Laplace** 譜其實不同 —— 用錯矩陣就會得到假反例。
+
+### 15.4 手徵算子的譜（修正過的版本）
+
+`γ_* = γ₁γ₂⋯γ_d`（`[D-Chirality]`，前提 `@gauge.clifford_available(p)`）。令 `s = (−1)^{d(d−1)/2}`，則
+
+| `d mod 4` | `s` | `γ_*²` | `χ_{γ_*}` | `p = 5` | `p = 13` |
+|---|---|---|---|---|---|
+| 0, 1 | `+1` | `+I` | `(x² − 1)^{m/2}` | 分裂 | 分裂 |
+| 2, 3 | `−1` | `−I` | `(x² + 1)^{m/2}`（**僅偶 d**） | 需 `p ≡ 1 (4)` | 需 `p ≡ 1 (4)` |
+
+* **[T-Spec-Chi]** `d` **奇**時 `γ_*` 其實是純量 `√s·I` ⟹ `χ = (x − √s)^m`，只有 **1** 個相異根；
+  舊稿的 `χ = (x²+1)^{m/2}` 對奇 `d` 是**錯的**。實測：`(3,5)` → 分裂、`roots = 1`；`(4,13)` → `γ_*² = I`（`sq1 = true`）、`roots = 2`。
+* 前置條件：`p ≡ 3 (mod 4)` 時 `−1` 非二次剩餘 ⟹ `x²+1` 不可約 ⟹ 不分裂（`(2,7)` 驗證），
+  且 `p = 3` 時 `clifford_available` 直接拒絕（無 `i` 的 `0` 回退）。
+* **[T-Spec-Chi-Formula]** 顯式 `χ` 與 `char_poly` 逐係數比對（`p > 2d+2` 時）。
+
+### 15.5 投影與跡
+
+* **[D-Projector]** 冪等 `P² = P` ⟹ `spec P ⊆ {0,1}` 且 `tr P = rank P`。
+  實測 `[[1,0],[0,1],[1,1]]`、`p = 7`：冪等、`tr = rank = 2`、`spectrum_roots = [(0,1),(1,2)]`。
+* `projector(A)` = `A(AᵀA)⁻¹Aᵀ`，**前提：A 行滿秩**；秩虧時回傳 `None`（測試斷言 `None`，不靜默給錯答案）。
+
+---
+
+## 16. 正則表示：跡比譜更細
+
+* **[D-RegularRep]** 扭曲群代數 `A^ω` 的左正則表示：`ρ_reg(a)[b][a+b] = ζ^{ω(a,b)}`。
+* **[T-Spec-RegularRep]** `tr ρ_reg(e) = |G|`，`a ≠ e` 時 `tr ρ_reg(a) = 0`。
+  實測 `G = ℤ/2 × ℤ/2`、`ℓ = 2`、`p = 5`、零 cocycle：`tr ρ(e) = 4 = |G|`，其餘 `0`。
+* **命題（跡 vs 譜）**：`ρ_reg` 的**譜**在多數情況下把不同元素混在一起，而**跡**能分離單位元 ——
+  所以「譜化」不是萬能的不變量提取器，這正是 §18 還要引入**五種關係**的原因。
+* 缺陷記錄：`regular_rep_matrix` 曾把 cocycle 的**指數** `ω(a,b)` 直接當矩陣元素（應用 `ζ^{ω(a,b)}`），
+  導致 `tr ρ(e) = 2` 而非 `4`；已改為 `@core.mod_pow(ζ, ω(a,b), p)`。
+
+---
+
+## 17. `ledger`：超級持久賬本
+
+### 17.1 結構
+
+* **[D-Entry]** `Entry{seq, kind, values, parents, prev, hash}`；`kind`：`0` 觀測、`1` 導出關係、`2` 定理宣稱。
+* **[D-Cell]** 單向鏈（不可變）：`Nil | Node(Entry, Cell)` —— 追加只建新節點，**舊快照結構共享**。
+* **[D-Ledger]** 頭：`{head, len, tip}`。
+* **[D-Fnv]/[D-HashEntry]** FNV-1a 64；`hash = f(seq, kind) → values → 0 → parents → 1 → prev`
+  （`0/1` 是欄位分隔符，避免「`[1,2]`+`[]`」與「`[1]`+`[2]`」撞雜湊）。
+
+### 17.2 定理（全部可重跑）
+
+| 標籤 | 陳述 | 驗證 |
+|---|---|---|
+| `[T-Ledger-Det]` | 同一串觀測 ⟹ 同一個 `tip`（重算 `seq` 連續、`prev` 連結、`hash` 相符） | `replay(rows)` 與原賬本 `tip` 相等 |
+| `[T-Ledger-Persist]` | 追加不改變任何舊快照 | 3 → 5 條後，舊賬本逐位元不變、仍 `verify` |
+| `[T-Ledger-Fork]` | `fork_index` = 共同前綴長度（以 `hash` 比對） | 3 條 → 5 條的延伸：`fork_index = 3` |
+| `[T-Ledger-Tamper]` | 篡改任何一條（首、中、尾）必使 `verify = false` | 3 個位置各驗一次 |
+| `[T-Ledger-Audit]` | 每條導出條目必須在**它的全部父條目**上成立 | `audit` 回傳 (通過, 失敗) = (n, 0) |
+
+### 17.3 與演變／關係的橋
+
+* **[E-Ledger-Bridge]** `ingest_rows(l, rows, kind)` / `ingest_rowset(l, rs, kind)`：把 `evolve` 的觀測列
+  （或 `relations` 的 `rec_values`）整批入賬。**與逐條 `append` 得到同一條雜湊鏈**（同一 `tip`）、
+  舊前綴不受影響（`fork_index` = 舊長度）、可 `replay`。
+* `derive_into(l, p, exact)`：由入賬的觀測用 §9 的消元引擎導出恆定關係，寫成 `kind = 1` 且帶父節點的條目；
+  `audit` 再逐條回驗。實測（`evolve_radon(3,10007,6,3)` 的 7 列）：導出 `1` 條、稽核 `1/0`。
+* 由此得到一條**跨層命題**：
+  > 只要一個結構能把「一次演化」寫成整數列，那麼它的守恆律就能被 (i) 自動導出（§9）、
+  > (ii) 不可篡改地記錄（§17）、(iii) 隨時稽核與重放（§17.2）—— 三者共用同一份資料。
+
+---
+
+## 18. `relations`：五種關係作為「導出擴展定理」的機制
+
+本節是本輪「導出擴展演算法及定理」的**方法論核心**：所有新命題都必須由五個 lens 之一推出，
+而不是直接斷言。`Rec{kind, a, b, holds}` 把每條關係壓成可入賬的整數列（`rec_values`）。
+
+### 18.1 相對（kind 0）：以基準歸一 ⟹ 尺度不變量
+
+* **[D-Rel]** `relative(a,b,p) = a·b⁻¹`（`F_p`）；**[D-RelProfile]** 逐項除上首項。
+* **[T-Rel-Scale]** `ys = c·xs ⟹ profile(xs) = profile(ys)`（`c ≠ 0`）。
+  `[3,6,9,12] → [1,2,3,4]`（`p = 10007`）、`[1,2,4,8] → [1,2,4]`（`p = 11`）。
+  **演算法** `[E-RelProfile]`：任何「量綱」資料先除以基準再比較，於是可以跨尺度對照（這正是 §9 帳本欄位的正規化）。
+
+### 18.2 對偶（kind 1）：轉置、伴隨、置換
+
+| 標籤 | 陳述 | 實測 |
+|---|---|---|
+| `[T-Dual-Rank]` | `rank A = rank Aᵀ`，且 `nullity(A) − nullity(Aᵀ) = cols − rows` | 隨機 `n×(n+1)`、`p ∈ {7,10007}`、`n = 2..4` 全成立 |
+| `[T-Dual-Chain]` | `δ^k = (∂_{k+1})ᵀ`、`∂∂ = 0`、`dim H^k = dim H_k` | `VR(C₄,1)`、`VR(C₅,1)`、`VR(C₆,2)` 皆 `(true, true)`；且 `β(VR(C₄,1)) = (1,1)` 與 §7 一致 |
+| `[T-Dual-Radon]` | `rank R = rank Rᵀ = n²` ⟹ Radon 變換單射 | `n = 2,3,5`：`rank = 4/9/25`、`injective = true` |
+| `[T-Dual-Tensor]` | `hyperdet222` 在 **6** 個指標置換下不變 | 25 個隨機 `F₃` 張量全成立 |
+
+* **修正（本輪抓到的真錯）**：原稿寫「`nullity(A) = nullity(Aᵀ)`」——對長方形矩陣是**錯**的
+  （`n×(n+1)` 時兩者差 1）。正確形式是上面的「指標」等式；第一次跑測試就是被這條擋下來的。
+* **算法** `dim H^k` 用**兩條獨立路徑**算（下鏈秩 vs 上鏈轉置秩），不是用同一個數字複製兩次 ——
+  否則「對偶」只是恆真句。
+
+### 18.3 對比（kind 2）：差集分割
+
+* **[D-Contrast]** `contrast(a,b) = (只在A, 只在B, 兩者皆是)`（三者皆為布林遮罩）。
+* **[T-Contrast-Partition]** 三塊**互斥**且併集恰為 `A ∪ B`：`|onlyA| + |onlyB| + |both| = |A ∪ B|`。
+  演算法 `check_contrast_partition` 直接回傳布林（互斥 + 覆蓋）。
+* 實測（5 謂詞表，`F₃` 的 6561 個張量）：`rank ≤ 1` 對 `Det = 0` 給出 `onlyA/onlyB/both = 0/2112/129`
+  ⟹ `rank ≤ 1` 的 129 個張量**全部**滿足 `Det = 0`（`onlyA = 0` 即是蘊含的數值證據）。
+
+### 18.4 蘊含（kind 3）：有限樣本上的蘊含格
+
+* **[D-Implies]** `p ⟹ q` ⟺ 不存在「`p` 真而 `q` 假」的樣本；**[E-ImplClosure]** Floyd–Warshall 傳遞閉包；
+  **[T-Impl-Equiv]** 雙向蘊含 = 等價。
+* **[T-Impl-Matrix]** 對 `F₃` 全部 6561 個 `2×2×2` 張量、5 個謂詞
+  （`0: rank ≤ 1`、`1: Det = 0`、`2: rank-2 分解數 = 0`、`3: rank = 3`、`4: Det ≠ 0`），蘊含矩陣為
+
+  ```
+       0 1 2 3 4
+  0    1 1 1 0 0      rank ≤ 1  ⟹  Det = 0, rank2 分解數 = 0
+  1    0 1 0 0 0      Det = 0  ⇏  rank ≤ 1（反例：秩 2 的 Det = 0 張量）
+  2    0 0 1 0 0
+  3    0 0 1 1 0      rank = 3  ⟹  rank2 分解數 = 0
+  4    0 0 0 0 1      Det ≠ 0   ⇏  rank = 3（§11 的負面結果 (1)）
+  ```
+
+* **結果**：閉包 = 原矩陣（已傳遞），**等價類 = 0 個**。
+  ⟹ 原猜想「`rank ≤ 1 ⟺ Det = 0 ⟺ #decomp = 0` 是一個等價類」**被計算否決**：
+  真實結構是**三條單向蘊含** + 兩條反例。這正是「蘊含 lens」的價值 —— 它把「聽起來對」的等價關係
+  壓成「單向」，並給出反例存在的方向。
+* 算法 `[E-ImplMatrix]` 的成本 = `5² × 6561` 次謂詞查詢；換任何一族有限結構都可重跑。
+
+### 18.5 比率（kind 4）：與尺度無關的常數
+
+| 標籤 | 陳述 | 實測 |
+|---|---|---|
+| `[D-Ratio]` | 約分後的比值（分母 0 → `(0,1)`） | — |
+| `[E-ConstantRatio]` | 一族比值全等時回傳該值，否則 `None`（**不硬給值**） | `[(1,2),(1,3)] → None` |
+| `[T-Ratio-Radon]` | `Σ_lines(Rf) : Σ_x f = (n+1) : 1` | `n = 2,3,5`、多個 `f` 皆得 `n+1`（`n=3` 即 `4:1`） |
+| `[T-Ratio-Flip]` | 翻轉圖 `k`-正則 ⟹ `E : V = k : 2 = (n−3) : 2` | `n = 5,6,7` → `1:1`、`3:2`、`2:1` |
+
+* **前提必須寫進命題**：`Σ f ≡ 0` 時 `Σ(Rf)/Σf` **不存在**（回傳 `None`）。測試特別造了一個零均值 `f`
+  來確認「不會給出比值」—— 這是把「定理的必要條件」變成程式的一部分。
+
+### 18.6 收集與入賬
+
+* **[E-Collect]** `collect(n_radon, p)` 把五類 lens 的代表性計算收成 `Rec` 列；`rec_values` 壓成 `(kind, a, b, holds)`。
+* **[E-CollectInto]** `collect_into_ledger(l, n, p)` 把每一條關係寫進 §17 的持久賬本
+  （`kind = 2` 宣稱），可 `verify`、可 `fork_index`、可 `replay`。實測 `moon run cmd/main`：
+  `collect(2,10007)` → 4 條全 `holds`；入賬後鏈長 `8 → 12`、`verify = true`。
+
+### 18.7 由五個 lens 導出的「擴展定理與算法」清單
+
+| # | 由哪個 lens | 新定理／算法 | 型態 |
+|---|---|---|---|
+| 1 | 相對 | `[T-Rel-Scale]` 剖面尺度不變；`[E-RelProfile]` | 恆等式（演算法：歸一化） |
+| 2 | 對偶 | `[T-Dual-Rank]` 指標等式（**修正**原稿錯誤） | 不等式 + 等式 |
+| 3 | 對偶 | `[T-Dual-Chain]` `dim H^k = dim H_k`（兩條獨立路徑） | 等式 |
+| 4 | 對偶 | `[T-Dual-Radon]` `rank R = n²` ⟹ 單射 | 等式 ⟹ 命題 |
+| 5 | 對偶 | `[T-Dual-Tensor]` 超行列式對 6 個指標置換不變 | 不變量 |
+| 6 | 對比 | `[T-Contrast-Partition]` 三塊互斥且覆蓋 `A ∪ B` | 分割恆等式 |
+| 7 | 蘊含 | `[T-Impl-Matrix]` 蘊含格（3 條單向 + 2 條反例，等價類 0） | 結構定理 + 反例 |
+| 8 | 比率 | `[T-Ratio-Radon]` `Σ(Rf):Σf = (n+1):1`（零均值時不存在） | 常數比 + 前置條件 |
+| 9 | 比率 | `[T-Ratio-Flip]` `E:V = (n−3):2` | 常數比 |
+| 10 | 五者合用 | `[E-Collect]/[E-CollectInto]`：關係 → 整數列 → 賬本 → 稽核 | 演算法（可重跑） |
+| 11 | 五者合用 | 跨層命題：導出（§9）+ 記錄（§17）+ 稽核（§17.2）+ 對偶/蘊含（§18） | 方法論命題 |
+
+---
+
+## 19. 譜序列引擎（`ss`）：把「一頁」變成可運算的物件
+
+### 19.1 定義
+
+* **[D-Page]** 一頁 `Page { r, p0, q0, np, nq, dims, d, p, qflip }`：
+  `dims[i][j]` 是 `E_r^{p0+i, q0+j}` 的維數，`d[i][j] : E_r^{p,q} → E_r^{p+r, q−r+1}` 是一個矩陣
+  （`None` 表示零映射）。`qflip = true` 時改用另一種雙次約定 `(p+r, q+r−1)`（Adams 型）。
+* **[E-DQ]** `page_dq` = `r−1`（qflip）或 `−(r−1)`（標準）；`page_target_q` / `page_source_q` 由它導出。
+
+### 19.2 定理
+
+| 標籤 | 陳述 | 驗證 |
+|---|---|---|
+| `[T-SS-DD]` | `d_r ∘ d_r = 0` 逐格成立（矩陣乘法） | `page_dd_zero`：Hopff、T³、Adams 頁皆 true |
+| `[E-PageNext]` | `E_{r+1}^{p,q} = ker d_r / im d_r` | `page_hom_dim = ker_dim − im_dim` |
+| `[T-SS-Kill]` | 1×1 的非零 `d_r` 同時消掉源與靶兩格 | 5/5 測試中「a 1x1 differential kills both cells」 |
+| `[T-SS-Total]` | 取下一頁不改變分次總維數（`Σ_{p+q=n}`） | `totals are preserved by page_next` |
+
+* **關鍵實作事實**：標準約定下 `d_r` 的雙次是 `(r, 1−r)`（源 `(0,j)` → 靶 `(2, j−1)`），
+  這個「1−r」的 q 位移是 §21、§24 全部計算的正確性前提；寫錯會讓 `d_r` 落到視窗之外而不報錯。
+* **[T-SS-Flip]** `qflip = true` 時 `page_target_q(page, 1) = 2`（r=2），`page_source_q(page, 2) = 1`。
+
+---
+
+## 20. 塞爾譜序列（`serre`）與交叉驗證
+
+* **[E-SerreE2]** `serre_e2(bb, bf, p)`：以底空間維數 `bb`、纖維維數 `bf` 建 `E_2^{p,q} = H^p(B) ⊗ H^q(F)`。
+* **[T-Serre-Conv]** `E_∞` 的總維數 = 底空間獨立算出的 Betti 數 ⟹ 收斂（`fit ∧ exact`）。
+
+| 例子 | 結果 |
+|---|---|
+| Hopf `S¹ → S³ → S²`（p=7） | `E_2` 4 格；`d_2 ≠ 0` ⟹ `E_3` 總維數 `[1,0,0,1]` = `cx_betti_all(S³)`；`serre_sphere_converges(1,1,7) = true` |
+| 球叢 `S^n → S^{2n+1} → S^{n+1}`，`e = 1,2`（mod 11） | `n = 1,2,3` 全部收斂；`e = 0` 時 `page_zero_diffs = true` |
+| `S² × S³` | `cx_betti_all = [1,0,1,1,0,1]`；退化兩列 ⟹ `page_converges = (true, true)`（**無擴張問題**） |
+| 扭曲係數 | `V = F_2, g = −1` → `(invariants, coinvariants) = (1,1)`；`F_7` 上 `(0,0)`；`diag(1,−1)` on `F_7²` → `(1,1)` |
+
+* **[E-SerreCross]** `serre_matches_homology(page, cx)`：把 `E_∞` 與 `@cellcx.cx_betti_all` 直接比對，
+  是「兩條獨立演算法互相稽核」的實作（不是同一條路徑算兩次）。
+
+---
+
+## 21. Adams 譜序列（`adams`）：Ext_A(F₂,F₂) 的最小自由分解
+
+### 21.1 演算法
+
+* **[E-Adem]** `adem(i, j)` 產生 Adem 關係的項；`mono_mul` 用它把 `Sq^I · Sq^J` 化成可容許基的線性和。
+* **[E-MinRes]** `ext_table(al, s_max, t_max)`：`F_0 = A`，`K_s = ker(F_s → K_{s−1})`，
+  `Ext^{s,t} = dim (K_s / A⁺K_s)_t`，其中 `A⁺K_s` 的生成元逐一由 `al.tab[ai]` 作用在 `K_s` 的基上，
+  再以**行階梯消去**（`f2_echelon` / `f2_reduce_vec`）取商。
+* **[T-Trunc]** 截斷不改變低度數的 Ext：`D = 8` 與 `D = 6` 在 `t ≤ 6` 上逐項相等。
+
+### 21.2 算出來的表（p = 2，`D = 8`，`s ≤ 3`、`t ≤ 8`）
+
+```
+        t=0 1 2 3 4 5 6 7 8
+ s=0     1 0 0 0 0 0 0 0 0
+ s=1     0 1 1 0 1 0 0 0 1     ← 不可分解元：deg 1, 2, 4, 8
+ s=2     0 0 1 0 1 1 0 0 1     ← h₀²(2,2)、h₁²(2,4)、h₀h₂(2,5)、?(2,8)
+ s=3     0 0 0 1 0 0 1 0 0     ← h₀³(3,3)、c₀(3,6)
+```
+
+* **重要校正（相對於「猜想值」）**：`Ext^{2,3} = 0` 而不是 1。原因是 `h₀·h₁ = 0` 在 `Ext_A` 中成立
+  （Beaudry–Campbell 的導引與 arXiv:2105.02601 的 `E_2(ko)` 關係都寫明 `h₀h₁ = 0`）。
+  這條不是猜的：引擎在 `(s,t) = (2,3)` 真的算出 0。
+* `Ext^{s,s} = 1`（`h₀`-塔）、`Ext^{s,t} = 0`（`t < s`）如預期。
+* **[T-Trunc]** 截斷不改變低度數：`D = 6` 與 `D = 8` 在 `t ≤ 6` 逐項相等（測試 `truncation stability of Ext`）。
+  **邊界聲明**：`t = 8` 那一欄是截斷代數的 Ext，可能含截斷造成的偽類；本檔不聲稱它是 `Ext_A` 的全部。
+### 21.3 對照組（演算法正確性的獨立證據）
+
+* **[T-Koszul]** 取 `A = E(Sq¹) = F₂[Sq¹]/(Sq¹²)`（外代數），則 `Ext_A(F₂,F₂) = F₂[h₀]`：
+  引擎算出「每個 `(s,s)` 恰好一維、其餘為零」，與 Koszul 對偶的已知答案一致。
+  這證明最小自由分解引擎本身正確，故 §21.2 的 `Ext^{2,3} = 0` 是 `A` 的真實性質，而不是程式錯誤。
+
+### 21.4 接到譜序列
+
+* **[E-AdamsPage]** `adams_page(ext, p)` 把 Ext 表放進 `@ss.Page`（`qflip = true`，`r = 2`）；
+  `adams_stem_dims` 讀出莖 `t − s` 上的 E₂ 維數：莖 0 = 4（`1, h₀, h₀², h₀³`）、莖 1 = 1（`h₁`）。
+
+---
+
+## 22. 格羅滕迪克拓撲（`grotop`）
+
+### 22.1 定義與演算法
+
+* **[D-Site]** 有限偏序集 `(n, leq, p)`；**[D-Sieve]** sieve = 向下封閉的開集集合（布林陣列）；
+* **[D-Meet]** `site_meet`（最大下界，不存在回 `−1`）；
+* **[E-Saturate]** `top_of_families`：由覆蓋族生成拓撲 —— 加入最大 sieve、對所有 `V ⊆ U` 取拉回、直到封閉。
+* **[D-Topology]** 拓撲同時保存「已飽和的 sieve 族」`cov`（供公理檢查）與「登錄的覆蓋族」`fams`（供層條件檢查）。
+
+### 22.2 公理是機器驗證的
+
+| 標籤 | 公理 | 實作 |
+|---|---|---|
+| `[T-Top1]` | (T1) 最大 sieve 覆蓋 | `top_axiom_max` |
+| `[T-Top2]` | (T2) 拉回穩定 | `top_axiom_pull` |
+| `[T-Top3]` | (T3) 局部刻劃 | `top_axiom_local` |
+
+* **正例**：離散拓撲、混沌拓撲、由 `{A,B} 覆蓋 U` 生成的拓撲全部通過（`top_valid = true`）。
+* **反例（測試真的抓到）**：拿掉最大 sieve ⟹ (T1) 失敗；只宣告 `{A}` 覆蓋 `U` 而不宣告拉回 ⟹
+  `f*S = {∅}` 在 `B` 上不是最大 sieve ⟹ (T2) 失敗。
+
+### 22.3 層條件
+
+* **[T-Sheaf]** 對覆蓋族 `(U_i)` 檢查正合性
+  `0 → F(U) → ∏ F(U_i) → ∏ F(U_i ∧ U_j)`，Čech 微分 `(d¹σ)_{ij} = σ_j − σ_i`
+  （`i = j` 的塊自動為零 ⟹ `d¹d⁰ = 0`，這是實作正確性的內部檢核）。
+  回傳 `(injective?, exact?, dim ker d⁰, dim ker d¹, rank d⁰)`。
+* **常數預層不是層**（`1 ≠ 2`）；**「點上的函數」層是層**（`k⁰ = 0, k¹ = r⁰ = 2`）。
+* **[E-Plus]** 加號構造的維數 = 相容族維數；對覆蓋族取**最大值**（colimit 的單調性，不是最小值）。
+
+---
+
+## 23. 凝聚集／凝聚群（`condensed`）
+
+以「有限層級鏈」表示凝聚對象：`S = lim_n S_n`（`sizes`, `maps`），映射是 one-hot 矩陣。
+
+| 標籤 | 陳述 | 演算法 |
+|---|---|---|
+| `[T-Prof]` | 合法 profinite 呈現：每欄恰一個 1、每列至少一個 1 | `prof_valid` |
+| `[E-Free]` | `Z[S]^■` 的層級鏈 = `Z[S_n]` 與誘導映射 | `chain_free` |
+| `[E-Func]` | 函數鏈 `C(S_n, F_p^k)`（正向系、單射） | `chain_func` |
+| `[E-Lim]` | 逆極限維數 = 複合映射的秩 | `chain_lim_dim` |
+| `[T-ExtVan]` | 自由鏈到上 + 函數鏈單射 ⟹ Mittag-Leffler ⟹ `Ext^{i>0}(Z[S]^■, F_p) = 0` | `cond_ext_vanishes` |
+| `[T-Tensor]` | `Z[S]^■ ⊗ Z[T]^■ ≅ Z[S × T]^■` | `chain_tensor` vs `chain_free(prof_prod)`，**逐層矩陣相等** |
+
+### 23.1 固態性：一個真正算得出來的缺口
+
+* **[T-Solid]** 對離散目標 `A = F_p^k`：
+  `Hom(Z[S], A) = lim_n C(S_n, A) = C(S_0, A)`（只有「常數型」），
+  `Hom(Z[S]^■, A) = colim_n C(S_n, A) = C(S_N, A)`（全部局部常數），
+  缺口 `= k(|S_N| − |S_0|) > 0` ⟹ **`F_p` 不是固態群**。
+  實測 `Z_2`（層級 2,4,8）：`2 → 8`，缺口 6；三維係數 `6 → 24`；單點缺口 0。
+* **[T-SolidCompact]** 對緊目標 `Z_p`（`= lim Z/p^n`）：兩邊都是 `lim_n (Z/p^n)^{|S_0|}`，
+  **缺口恆為 0** ⟹ `Z_p` 固態。這兩條把「固態」從形容词變成可計算的判準。
+
+> **邊界聲明**：本引擎只覆蓋 profinite（有限層級）情形。`Ext^{i>0}` 的非零只能出現在
+> 非 profinite（「輕凝聚」`N∞` 型的無窮維係數）情形；本檔對 `N∞` 只驗證了 ML 證書，未聲稱計算非零 Ext。
+
+---
+
+## 24. 扭曲 AHSS（`ahss`）
+
+### 24.1 模型
+
+* **[D-Alg]** `H^*(X;F_p)` 是顯式分次代數：`dims` + 乘法表 `cup[i][j]`（列 = `H^{i+j}`、欄 = `a·dims[j] + b`）。
+* **[D-Wedge]** `alg_wedge(degs)`：外代數（球面、環面、`S²×S³` 全部涵蓋）；
+  **[D-Tensor]** `alg_tensor`：`H^k(A⊗B) = ⊕_{i+j=k} H^i(A) ⊗ H^j(B)`。
+* **[T-Assoc] / [T-Unit]** 結合律與單位元用**克羅內克積 + 矩陣相等**機器驗證
+  （`(xy)z = x(yz)` 對所有基三元組）。
+
+### 24.2 微分
+
+* **[E-CupOp]** `cup_operator(a, 3, h)` 建出 `H∪(−)` 的矩陣族。
+* **[T-Sq3]** `dim X ≤ 5` ⟹ `Sq³ = 0`：`deg x ≤ 2` 由不穩定性 `Sq^i x = 0 (i > |x|)`；
+  `deg x ≥ 3` 時 `Sq³x ∈ H^{≥6} = 0`。這是**推導**出來的，不是假設的零算子。
+* **[E-AhssD3]** `d_3 = Sq³ + H∪(−)`，雙次 `(3, −2)`（引擎標準約定）。
+
+### 24.3 計算結果
+
+| 例子 | 結果 |
+|---|---|
+| `S³`，`H = 0` | `page_zero_diffs = true`；`E_2 = E_∞`，`page_total(·,0) = 1` |
+| `S³`，`H = x`（`H³` 生成元） | `d_3(1) = x`；`E_4` 的源（`H⁰`）與靶（`H³`）同時被殺 ⟹ 三層塔總維數 `0` |
+| `T³`，`H = xyz` | `page_dd_zero = true`；`E_4`：`H⁰` 被殺、`H¹ = 3`、`H² = 3` 不動、`H³` 被殺 |
+| `S²`，任何 `H` | `H³ = 0` ⟹ twist 不可見（`ops_is_zero = true`） |
+
+---
+
+## 25. 交叉運算（`xops`）：四者互動導出的新定理
+
+> 這一節的每條定理都**同時用到至少兩個套件**，不是任何單一套件的重述。
+
+| 標籤 | 陳述（由哪些結構交互而來） | 驗證 |
+|---|---|---|
+| `[T-X-Vanish]` | **扭曲 K × AHSS**：`H³(X;Z) = 0 ⟹ d_3 = Sq³`，且 `dim X ≤ 5` 時 `Sq³ = 0`，故 twist 完全不可見。 | `S², S¹` → 不可見；`S³, T³, S²×S³` → 可見 |
+| `[T-X-Sum]` | **扭曲 AHSS × 拓撲分解**：`E_∞` 對不相交並可加。把 `alg_sum` 的塊對角乘法 + 只在一份上生效的 twist 一起算，得 `Σ_n E_∞(X⊔Y) = Σ_n E_∞(X) + Σ_n E_∞(Y)` 逐分次成立。 | 5 個分次全 true |
+| `[T-X-Site]` | **非交叉樹 × 格羅滕迪克拓撲**：非交叉森林（位元遮罩、`@nc.chords_cross` 判交叉）的「分量覆蓋」是一個格羅滕迪克拓撲。(T1)(T2)(T3) 在 `n = 3` 全驗；`n = 4` 驗 (T1)(T2)（(T3) 成本過高，如實聲明）。 | `n=3`: 8 個開集全通過；`n=4`: 48 個開集（64 − 16 個含交叉對的遮罩） |
+| `[T-X-Obstruct]` | **格羅滕迪克拓撲 × 扭曲 AHSS**：局部給定的 twist 類要黏成整體類的障礙 `= Σ(k¹ − r⁰)`。可黏（常數層、弦上函數層）→ 0；限制映射為零的「假 twist」→ 正。 | `good → 0`、`bad > 0`、`F_p^{|U|} → 0` |
+
+* **[T-X-Obstruct] 的意義**：`H³` 是扭曲 K 理論的唯一入口（§24），而「`H³` 是否為整體類」
+  正是它在格羅滕迪克拓撲上的層條件；因此 `k¹ − r⁰` 是一個**可計算的扭曲存在性判準**：
+  它把「有一個 twist 類」與「有一族局部 twist 類」區分開來。
+* 三條測試同時也是**反例檢核**：`bad` 的 `is_sheaf = false` 與 `obstruction > 0` 必須同時成立，
+  否則就是實作把「局部」誤當「整體」。
+
+---
+
+## 26. 重跑總表（第三輪）
+
+```sh
+export PATH="$HOME/.moon/bin:$PATH"
+cd tensorlab
+moon check          # 0 errors, 0 warnings
+moon test           # Total tests: 144, passed: 144, failed: 0
+moon run cmd/main   # 163 行報告（新增 §19–§25 七個區段）
+```
+
+| 套件 | 測試數 | 主題 |
+|---|---|---|
+| core / tensor / nc / twist / radon / gauge / metric / evolve | 10 / 12 / 10 / 8 / 5 / 9 / 6 / 7 | §1–§9 |
+| hyper / spectral / ledger / relations | 7 / 12 / 7 / 8 | §13–§18 |
+| **cellcx** | 3 | CW 複形、透鏡空間撓率、持續條碼 |
+| **ss** | 5 | 譜序列引擎（雙次、消滅、張量、qflip） |
+| **serre** | 4 | 塞爾譜序列與胞腔同調交叉驗證 |
+| **adams** | 5 | Adem 關係、Ext 表、Koszul 對照、Adams 頁 |
+| **grotop** | 6 | site/sieve/覆蓋公理/層條件/加號構造 |
+| **condensed** | 5 | profinite 鏈、Ext 消失、固態缺口、張量同構 |
+| **ahss** | 6 | 分次代數、Sq³ 消失、扭曲 d₃、E₄ 計算 |
+| **dtensor** | 4 | 導出張量積：Koszul 分解、Tor = C(2g,i)、Künneth |
+| **xops** | 5 | 四結構交互定理 + Koszul 對偶（Ext vs Tor） |
+
+---
+
+## 27. 導出張量積（`dtensor`）：Tor 用兩份自由分解真算
+
+### 27.1 為什麼不能只用一份分解
+
+* **[T-Tor-Right]** `Tor_*^A(F_2,F_2) = H_*(K_* ⊗_A K'_*)`：必須**同時**用兩份自由分解
+  （`F_2 ⊗^L_A F_2` 的定義），不能只用一份 `K_*`。
+  用一份分解算出的數其實是 `Ext` 那一側的答案 —— 這個「差一側」的錯誤在實作過程中真的發生過
+  （見 CODE_HEALTH §6.1 #10），修法就是改成 `K ⊗_A K'`。
+
+### 27.2 演算法
+
+* **[D-Poly]** `A = F_2[x_1..x_g]`（生成元度數 1，截斷到總度數 `n`）。
+* **[D-Koszul]** `K_i = ⊕_{|S|=i} A·e_S`，`d_i(e_S·m) = Σ_{j∈S} (S∖j, m+e_j)`（F_2 無號）。
+  基的內部度數 = `i + |m|`，矩陣由 `koszul_d` 逐項建出。
+* **[T-KoszulDD]** `d² = 0`：對 `g = 1,2,3` 的每個內部度數格子用矩陣乘法驗證。
+* **[T-KoszulExact]** `K_*` 確是 `F_2` 的自由分解：`dim ker d_i = rank d_{i+1}` 逐格成立。
+* **[E-Tor]** 約化複形 `K ⊗_A K' ⊗_A F_2`：基 = 兩份子集對 `(S_1,S_2)`，同調度 = `|S_1|+|S_2|`；
+  微分矩陣由「取常數項」逐項計算（本模型中係數全在 `A⁺`，故矩陣為零 —— 但這是**算出來的**）。
+  `Tor_i = dim ker(d_i⊗1) − rank(d_{i+1}⊗1)`。
+
+### 27.3 結果
+
+| 代數 | 計算結果 |
+|---|---|
+| `A = F_2[x]` | `Tor_0, Tor_1, Tor_2 = 1, 2, 1`（= `Λ(u₁,u₂)`），`Tor_{i≥3} = 0` |
+| `A = F_2[x,y]` | `1, 4, 6, 4, 1`（= `Λ` on `2g = 4` 個生成元） |
+| `A = F_2[x,y,z]` | `Tor_1 = 6`、`Tor_3 = 20`、`Tor_6 = 1` |
+| **Künneth** | `Tor^{A⊗B}_i = ⊕_{i₁+i₂=i} Tor^A_{i₁} ⊗ Tor^B_{i₂}`（三張表獨立算出，逐格相等） |
+
+* **[T-X-Koszul]（§25 追加）** Koszul 對偶的兩面：`Ext_{Λ(V)}(F_2,F_2)` 在 `(i,i)` 恆為 **1**（`@adams`），
+  而 `Tor^{Sym(V)}_i(F_2,F_2)` 為 **C(2g,i)**（`@dtensor`）。兩個引擎、兩條路徑、互為見證。

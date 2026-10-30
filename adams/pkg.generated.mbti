@@ -1,0 +1,63 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/adams"
+
+import {
+  "username/tensorlab/ss",
+}
+
+// Values
+pub fn adams_page(Array[Array[Int32]], Int32) -> @ss.Page
+
+pub fn adams_stem_dims(@ss.Page, Int32, Int32) -> Array[Int32]
+
+pub fn adem(Int32, Int32) -> Array[Array[Int32]]
+
+pub fn binom_mod2(Int32, Int32) -> Int32
+
+pub fn ext_table(StrAlg, Int32, Int32) -> Array[Array[Int32]]
+
+pub fn f2_echelon(Array[Array[Int32]], Int32) -> (Array[Array[Int32]], Array[Int32])
+
+pub fn f2_reduce_all(Array[Array[Int32]], Int32) -> (Int32, Array[Array[Int32]])
+
+pub fn f2_reduce_vec(Array[Int32], Array[Array[Int32]], Array[Int32], Int32) -> Array[Int32]
+
+pub fn gen_admissible(Int32) -> Array[Array[Int32]]
+
+pub fn idx_at(Array[Int32], Array[Int32], Int32, Int32) -> Int32
+
+pub fn indecomposable_degs(StrAlg) -> Array[Int32]
+
+pub fn is_admissible(Array[Int32]) -> Bool
+
+pub fn mono_deg(Array[Int32]) -> Int32
+
+pub fn mono_index(Array[Array[Int32]], Array[Int32]) -> Int32
+
+pub fn mono_mul(Array[Int32], Array[Int32]) -> Array[Array[Int32]]
+
+pub fn mono_norm(Array[Int32]) -> Array[Int32]
+
+pub fn sort_monos(Array[Array[Int32]]) -> Unit
+
+pub fn stralg_dim(StrAlg) -> Int32
+
+pub fn stralg_truncated(Int32) -> StrAlg
+
+pub fn xor_ids(Array[Int32]) -> Array[Int32]
+
+pub fn xor_terms(Array[Array[Int32]]) -> Array[Array[Int32]]
+
+// Errors
+
+// Types and methods
+pub struct StrAlg {
+  maxdeg : Int32
+  basis : Array[Array[Int32]]
+  deg : Array[Int32]
+  tab : Array[Array[Array[Int32]]]
+}
+
+// Type aliases
+
+// Traits

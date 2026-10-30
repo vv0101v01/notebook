@@ -1,0 +1,73 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/hyper"
+
+import {
+  "username/tensorlab/metric",
+}
+
+// Values
+pub fn abs_diff_hyper(Int32) -> Hyper
+
+pub fn check_assoc(Hyper) -> Bool
+
+pub fn check_closure(Hyper) -> Bool
+
+pub fn check_comm(Hyper) -> Bool
+
+pub fn check_identity(Hyper, Int32) -> Bool
+
+pub fn check_inverse(Hyper, Int32) -> Bool
+
+pub fn check_repro(Hyper) -> Bool
+
+pub fn crisp_cyclic_hyper(Int32) -> Hyper
+
+pub fn flip_hyper(Int32) -> Hyper
+
+pub fn geodesic_hyper(Array[Array[Int32]], Int32) -> Hyper
+
+pub fn hyper_cell_profile(Hyper) -> Array[Int32]
+
+pub fn hyper_cell_size(Hyper, Int32, Int32) -> Int32
+
+pub fn hyper_classify(Hyper, Int32) -> (Bool, Bool, Bool, Bool, Bool, Bool)
+
+pub fn hyper_contains(Hyper, Int32, Int32, Int32) -> Bool
+
+pub fn hyper_from(Int32, (Int32, Int32, Int32) -> Bool) -> Hyper
+
+pub fn hyper_potency(Hyper, Int32, Int32) -> Int32
+
+pub fn hyper_pow(Hyper, Int32, Int32) -> Array[Bool]
+
+pub fn hyper_size(Hyper) -> Int32
+
+pub fn interval_hyper(Int32) -> Hyper
+
+pub fn is_canonical_hypergroup(Hyper, Int32) -> Bool
+
+pub fn krasner_hyper() -> Hyper
+
+pub fn mat_rank_hyper_exhaustive(Int32, Int32) -> (Hyper, Bool)
+
+pub fn metric_hyper(@metric.MSpace) -> Hyper
+
+pub fn tensor_rank_hyper() -> Hyper
+
+pub fn triple_left(Hyper, Int32, Int32, Int32) -> Array[Bool]
+
+pub fn triple_right(Hyper, Int32, Int32, Int32) -> Array[Bool]
+
+pub fn truncated_add_hyper(Int32) -> Hyper
+
+// Errors
+
+// Types and methods
+pub struct Hyper {
+  size : Int32
+  table : Array[Array[Bool]]
+}
+
+// Type aliases
+
+// Traits

@@ -207,7 +207,9 @@ pub fn check_quad_identity(r : Radon, f : Array[Int32]) -> Bool {
     s = @core.fld_add(fld, s, x)
   }
   let rhs = @core.fld_add(
-    fld, @core.fld_mul(fld, r.n, s0), @core.fld_mul(fld, s, s),
+    fld,
+    @core.fld_mul(fld, r.n, s0),
+    @core.fld_mul(fld, s, s),
   )
   s1 == rhs
 }
@@ -246,7 +248,11 @@ pub fn fourier(v : Array[Int32], w : Int32, p : Int32) -> Array[Int32] {
     let mut s = 0
     let mut j = 0
     while j < n {
-      s = @core.fld_add(f, s, @core.fld_mul(f, v[j], @core.mod_pow(w, j * k, p)))
+      s = @core.fld_add(
+        f,
+        s,
+        @core.fld_mul(f, v[j], @core.mod_pow(w, j * k, p)),
+      )
       j = j + 1
     }
     s
@@ -276,7 +282,9 @@ pub fn check_slice(r : Radon, f : Array[Int32]) -> Bool {
         let va = @core.mod_pow(w, a * x, p)
         let vb = @core.mod_pow(w, b * y, p)
         s = @core.fld_add(
-          fld, s, @core.fld_mul(fld, @core.fld_mul(fld, f[x * n + y], va), vb)
+          fld,
+          s,
+          @core.fld_mul(fld, @core.fld_mul(fld, f[x * n + y], va), vb),
         )
         y = y + 1
       }

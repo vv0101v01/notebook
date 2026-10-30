@@ -1,6 +1,0 @@
-import {
-  "username/tensorlab/core",
-  "username/tensorlab/metric",
-  "username/tensorlab/snc",
-  "username/tensorlab/spec",
-}

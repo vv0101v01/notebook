@@ -1,0 +1,80 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/cellcx"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn cx_barcode(FiltCx) -> Array[(Int32, Int32, Int32)]
+
+pub fn cx_barcode_summary(FiltCx) -> Array[(Int32, Int32, Int32)]
+
+pub fn cx_betti(CellCx, Int32) -> Int32
+
+pub fn cx_betti_all(CellCx) -> Array[Int32]
+
+pub fn cx_cell_count(CellCx, Int32) -> Int32
+
+pub fn cx_check_dd(CellCx) -> Bool
+
+pub fn cx_euler(CellCx) -> Int32
+
+pub fn cx_euler_betti(CellCx) -> Int32
+
+pub fn cx_field(CellCx) -> Int32
+
+pub fn cx_from_faces(Array[Array[Int32]], Int32) -> CellCx
+
+pub fn cx_homology_int(CellCx) -> Array[(Int32, Array[Int32])]
+
+pub fn cx_is_sphere(CellCx, Int32) -> Bool
+
+pub fn cx_lens(Int32, Int32, Int32) -> CellCx
+
+pub fn cx_new(Array[Int32], Array[@core.Mat], Int32) -> CellCx
+
+pub fn cx_persistent_betti(FiltCx, Int32) -> Array[Int32]
+
+pub fn cx_point(Int32) -> CellCx
+
+pub fn cx_product(CellCx, CellCx) -> CellCx
+
+pub fn cx_rank_bnd(CellCx, Int32) -> Int32
+
+pub fn cx_rank_int(CellCx, Int32) -> Int32
+
+pub fn cx_sphere(Int32, Int32) -> CellCx
+
+pub fn cx_top_dim(CellCx) -> Int32
+
+pub fn cx_torus(Int32, Int32) -> CellCx
+
+pub fn filt_const(CellCx, Int32) -> FiltCx
+
+pub fn filt_order(Array[Int32]) -> Array[Int32]
+
+pub fn filt_with(CellCx, (Int32, Int32) -> Int32) -> FiltCx
+
+pub fn find_simplex(Array[Array[Int32]], Array[Int32]) -> Int32
+
+pub fn insert_simplex(Array[Array[Int32]], Array[Int32]) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct CellCx {
+  dims : Int32
+  counts : Array[Int32]
+  bnd : Array[@core.Mat]
+  p : Int32
+}
+
+pub struct FiltCx {
+  cx : CellCx
+  vals : Array[Array[Int32]]
+}
+
+// Type aliases
+
+// Traits

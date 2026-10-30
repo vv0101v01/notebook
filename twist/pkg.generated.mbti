@@ -48,9 +48,15 @@ pub fn is_perfect_square(Int32) -> Bool
 
 pub fn mk_omega(Grp, Int32, Int32, Array[Int32]) -> Omega
 
+pub fn omega_ell(Omega) -> Int32
+
+pub fn omega_field(Omega) -> Int32
+
 pub fn omega_gauge(Omega, Array[Int32]) -> Array[Int32]
 
 pub fn omega_get(Omega, Int32, Int32) -> Int32
+
+pub fn omega_group(Omega) -> Grp
 
 pub fn omega_is_cocycle(Omega) -> Bool
 
@@ -59,6 +65,8 @@ pub fn omega_radical(Omega) -> Array[Int32]
 pub fn omega_radical_size(Omega) -> Int32
 
 pub fn omega_with_w(Omega, Array[Int32]) -> Omega
+
+pub fn omega_zeta(Omega) -> Int32
 
 pub fn primitive_root(Int32, Int32) -> Int32
 

@@ -14,8 +14,8 @@ test "non-crossing tree counts match closed formula [T-NCT-Count]" {
 test "formula stays exact past Int32 (regression for silent truncation)" {
   // 早期 Int32 版本在 n=16 起給出負數；Int64 版本必須是這些精確值。
   let expect = [
-    300830572L, 1822766520L, 11124755664L, 68328754959L, 422030545335L,
-    2619631042665L, 16332922290300L, 102240109897695L, 642312451217745L,
+    300830572L, 1822766520L, 11124755664L, 68328754959L, 422030545335L, 2619631042665L,
+    16332922290300L, 102240109897695L, 642312451217745L,
   ]
   for n = 14; n <= 22; n = n + 1 {
     assert_eq(@nc.nc_tree_formula(n), expect[n - 14])
@@ -53,13 +53,19 @@ test "catalan families: matchings & triangulations [T-Cat-Match][T-Tri-Cat]" {
 ///|
 test "matching DP agrees with brute force" {
   let n = 8
-  let rng = @core.rng_seed(7)
+  // 測試內的確定性偽隨機序列（LCG）：nc 的測試不需要 core 的整套代數，保持依賴最小。
+  let vals : Array[Int32] = []
+  let mut st = 7
+  for _k = 0; _k < n * n * 6; _k = _k + 1 {
+    st = (st * 37 + 101) % 8192
+    vals.push(st % 13 + 1)
+  }
   let mut ok = true
   for trial = 0; trial < 6; trial = trial + 1 {
     // 先抽上三角，再對稱化（保證 w 對稱）
     let up : Array[Int32] = Array::makei(n * n, k => {
       if k / n < k % n {
-        1 + @core.rng_below(rng, 13)
+        vals[trial * n * n + k]
       } else {
         0
       }

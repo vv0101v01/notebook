@@ -14,21 +14,21 @@
 // ===================== Ledger 與關係推導 =====================
 
 ///|
-/// [D-Ledger] 演變過程中每一步的觀測值（每列一步，欄為候選量；
+/// [D-RowSet] 演變過程中每一步的觀測值（每列一步，欄為候選量；
 ///   若含常數欄 1，则可表達仿射關係）。
-pub struct Ledger {
+pub struct RowSet {
   rows : Array[Array[Int32]]
 }
 
 ///|
-pub fn ledger_of(rows : Array[Array[Int32]]) -> Ledger {
-  Ledger::{ rows, }
+pub fn rowset_of(rows : Array[Array[Int32]]) -> RowSet {
+  RowSet::{ rows, }
 }
 
 ///|
 /// [D-LedgerConst] 在左側加一欄常數 1（允許常數項）。
-pub fn ledger_with_const(rows : Array[Array[Int32]]) -> Ledger {
-  Ledger::{
+pub fn rowset_with_const(rows : Array[Array[Int32]]) -> RowSet {
+  RowSet::{
     rows: Array::makei(rows.length(), i => {
       let r = rows[i]
       Array::makei(r.length() + 1, j => if j == 0 { 1 } else { r[j - 1] })
@@ -37,8 +37,14 @@ pub fn ledger_with_const(rows : Array[Array[Int32]]) -> Ledger {
 }
 
 ///|
-pub fn ledger_len(l : Ledger) -> Int32 {
+pub fn rowset_len(l : RowSet) -> Int32 {
   l.rows.length()
+}
+
+///|
+/// [D-Rows] 取出全部列（供 ledger 等下游套件取用）。
+pub fn rowset_rows(l : RowSet) -> Array[Array[Int32]] {
+  l.rows
 }
 
 ///|
@@ -55,19 +61,19 @@ pub fn dot(c : Array[Int32], row : Array[Int32]) -> Int32 {
 
 ///|
 /// [D-RelExact] 關係 c 在 ℤ 上於每一步成立。
-pub fn holds_exact(l : Ledger, c : Array[Int32]) -> Bool {
+pub fn holds_exact(l : RowSet, c : Array[Int32]) -> Bool {
   l.rows.all(row => dot(c, row) == 0)
 }
 
 ///|
 /// [D-RelMod] 關係 c 在 F_p 上於每一步成立。
-pub fn holds_mod(l : Ledger, c : Array[Int32], p : Int32) -> Bool {
+pub fn holds_mod(l : RowSet, c : Array[Int32], p : Int32) -> Bool {
   l.rows.all(row => @core.vec_dot(c, row, p) == 0)
 }
 
 ///|
 fn normalize(c : Array[Int32], p : Int32) -> Array[Int32] {
-  // 最小绝對代表 + 首個非零係數為正
+  // 最小絕對代表 + 首個非零係數為正
   let v = Array::makei(c.length(), i => {
     let x = c[i] % p
     if x > p / 2 {
@@ -106,7 +112,7 @@ fn normalize(c : Array[Int32], p : Int32) -> Array[Int32] {
 ///       使「同一關係的不同整數組合」也被納入——這一步讓導出結果對基的選擇不敏感。
 ///   因每條關係都經過代回檢驗，不會產生偽關係。
 pub fn derive_relations(
-  l : Ledger,
+  l : RowSet,
   p : Int32,
   exact : Bool,
 ) -> Array[Array[Int32]] {
@@ -160,7 +166,7 @@ fn sub_vec(a : Array[Int32], b : Array[Int32]) -> Array[Int32] {
 
 ///|
 fn accepts(
-  l : Ledger,
+  l : RowSet,
   c : Array[Int32],
   p : Int32,
   exact : Bool,
@@ -210,8 +216,8 @@ pub fn relation_derived(
 ///    各家族的全部導出關係是否都能轉移，則由各自的測試單獨審查。）
 ///   回傳 (目標關係被導出, 目標關係在 B 上仍恆定)。
 pub fn check_derived_then_transfer(
-  a : Ledger,
-  b : Ledger,
+  a : RowSet,
+  b : RowSet,
   p : Int32,
   exact : Bool,
   target : Array[Int32],
@@ -233,7 +239,7 @@ pub fn check_derived_then_transfer(
 ///   每步記錄 (三角數, 對偶圖頂點數, 對偶圖邊數, 最大度, 對角線交叉對數)。
 /// [Inv-Flip] 恆定關係：E_dual = V_dual - 1（對偶是樹）、交叉對數 = 0、
 ///   三角數 = 對偶頂點數 = n-2。
-pub fn evolve_flips(n : Int32, steps : Int32, seed : Int32) -> Ledger {
+pub fn evolve_flips(n : Int32, steps : Int32, seed : Int32) -> RowSet {
   let all = @nc.triangulations(n)
   let rng = @core.rng_seed(seed)
   let mut cur = 0
@@ -279,7 +285,7 @@ pub fn evolve_flips(n : Int32, steps : Int32, seed : Int32) -> Ledger {
     }
     t = t + 1
   }
-  ledger_with_const(rows)
+  rowset_with_const(rows)
 }
 
 // ===================== 演變二：coboundary gauge 流（twist）=====================
@@ -288,7 +294,7 @@ pub fn evolve_flips(n : Int32, steps : Int32, seed : Int32) -> Ledger {
 /// [E-Gauge] 從 Clifford cocycle 出發，反覆施加隨機規範變換，
 ///   每步記錄 (|G|, |rad|, dim Z(A^ω), d²·|rad|, Σ_{a,b} ω(a,b))（最後一个是可變量）。
 /// [Inv-Gauge] 恆定關係：dim Z = |rad|、d²·|rad| = |G|（K₀ 秩與維數公式沿规範流守恆）。
-pub fn evolve_gauge(d : Int32, steps : Int32, seed : Int32) -> Ledger {
+pub fn evolve_gauge(d : Int32, steps : Int32, seed : Int32) -> RowSet {
   let g = @twist.grp(Array::makei(d, _ => 2))
   let p = 5
   let n = @twist.grp_order(g)
@@ -316,7 +322,7 @@ pub fn evolve_gauge(d : Int32, steps : Int32, seed : Int32) -> Ledger {
     o = @twist.omega_with_w(o, @twist.omega_gauge(o, mu))
     t = t + 1
   }
-  ledger_of(rows)
+  rowset_of(rows)
 }
 
 // ===================== 演變三：Radon 平滑 =====================
@@ -330,7 +336,7 @@ pub fn evolve_radon(
   p : Int32,
   steps : Int32,
   seed : Int32,
-) -> Ledger {
+) -> RowSet {
   let r = @radon.mk_radon(n, p)
   let m = @radon.radon_matrix(r)
   let mt = @core.mat_transpose(m)
@@ -360,7 +366,7 @@ pub fn evolve_radon(
     f = @core.vec_scale(g, inv_n, p)
     t = t + 1
   }
-  ledger_of(rows)
+  rowset_of(rows)
 }
 
 // ===================== 演變四：SL₂ 剪切（tensor）=====================
@@ -369,7 +375,7 @@ pub fn evolve_radon(
 /// [E-Shear] 對 T ∈ F_p^{2×2×2} 施加 mode-0 初等剪切 T'_{0jk} = T_{0jk} + c·T_{1jk}，
 ///   每步記錄 (Det(T), Det(T'))。
 /// [Inv-Shear] 恆定關係：Det(T') − Det(T) = 0 —— Cayley 超行列式是 SL₂³-不變量。
-pub fn evolve_shear(p : Int32, steps : Int32, seed : Int32) -> Ledger {
+pub fn evolve_shear(p : Int32, steps : Int32, seed : Int32) -> RowSet {
   let rng = @core.rng_seed(seed)
   let mut t = @tensor.t3_of(2, 2, 2, p, (_i, _j, _k) => @core.rng_below(rng, p))
   let rows : Array[Array[Int32]] = []
@@ -389,7 +395,7 @@ pub fn evolve_shear(p : Int32, steps : Int32, seed : Int32) -> Ledger {
     t = t2
     it = it + 1
   }
-  ledger_of(rows)
+  rowset_of(rows)
 }
 
 // ===================== 演變五：VR 尺度增長（metric）=====================
@@ -397,7 +403,7 @@ pub fn evolve_shear(p : Int32, steps : Int32, seed : Int32) -> Ledger {
 ///|
 /// [E-VR] 沿尺度 r = 1,2,… 增長；每步記錄 (V, E, F, β0, β1, χ_simplicial)。
 /// [Inv-VR] 恆定關係：V − E + F − (β0 − β1) = 0（Euler），且 β0 ≡ 1（連通性不變）。
-pub fn evolve_vr(n : Int32, rmax : Int32) -> Ledger {
+pub fn evolve_vr(n : Int32, rmax : Int32) -> RowSet {
   // （保留原行序，行內容在下方重建）
   let sp = @metric.mspace_cycle(n, 1)
   let rows : Array[Array[Int32]] = []
@@ -412,7 +418,7 @@ pub fn evolve_vr(n : Int32, rmax : Int32) -> Ledger {
     let _ = rows.push([chi_s, chi_b, get(0), get(1)])
     r = r + 1
   }
-  ledger_with_const(rows)
+  rowset_with_const(rows)
 }
 
 // ===================== 由資料得出的新定理（可執行版本）=====================

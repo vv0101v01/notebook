@@ -1,0 +1,90 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/grotop"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn all_sieves(Site, Int32) -> Array[Array[Bool]]
+
+pub fn covers(Topology, Int32, Array[Bool]) -> Bool
+
+pub fn has_sieve(Array[Array[Bool]], Array[Bool]) -> Bool
+
+pub fn is_sheaf(Presheaf, Topology) -> Bool
+
+pub fn pf_new(Site, Array[Int32], (Int32, Int32) -> @core.Mat?) -> Presheaf
+
+pub fn pf_plus_dim(Presheaf, Int32, Array[Int32]) -> Int32
+
+pub fn pf_plus_dim_all(Presheaf, Topology, Int32) -> Int32
+
+pub fn pf_res(Presheaf, Int32, Int32) -> @core.Mat
+
+pub fn sheaf_check(Presheaf, Int32, Array[Int32]) -> (Bool, Bool, Int32, Int32, Int32)
+
+pub fn sieve_and(Site, Array[Bool], Array[Bool]) -> Array[Bool]
+
+pub fn sieve_elems(Site, Array[Bool]) -> Array[Int32]
+
+pub fn sieve_empty(Site) -> Array[Bool]
+
+pub fn sieve_generate(Site, Array[Int32]) -> Array[Bool]
+
+pub fn sieve_is_down_closed(Site, Array[Bool]) -> Bool
+
+pub fn sieve_le(Site, Array[Bool], Array[Bool]) -> Bool
+
+pub fn sieve_max(Site, Int32) -> Array[Bool]
+
+pub fn sieve_pull(Site, Array[Bool], Int32) -> Array[Bool]
+
+pub fn site_le(Site, Int32, Int32) -> Bool
+
+pub fn site_meet(Site, Int32, Int32) -> Int32
+
+pub fn site_new(Array[Array[Bool]], Int32) -> Site
+
+pub fn site_valid(Site) -> Bool
+
+pub fn top_axiom_local(Topology) -> Bool
+
+pub fn top_axiom_max(Topology) -> Bool
+
+pub fn top_axiom_pull(Topology) -> Bool
+
+pub fn top_chaotic(Site) -> Topology
+
+pub fn top_discrete(Site) -> Topology
+
+pub fn top_of_families(Site, Array[(Int32, Array[Int32])]) -> Topology
+
+pub fn top_valid(Topology) -> Bool
+
+pub fn vstack(Array[@core.Mat], Int32) -> @core.Mat
+
+// Errors
+
+// Types and methods
+pub struct Presheaf {
+  site : Site
+  dims : Array[Int32]
+  res : Array[Array[@core.Mat?]]
+}
+
+pub struct Site {
+  n : Int32
+  leq : Array[Array[Bool]]
+  p : Int32
+}
+
+pub struct Topology {
+  site : Site
+  cov : Array[Array[Array[Bool]]]
+  fams : Array[Array[Array[Int32]]]
+}
+
+// Type aliases
+
+// Traits

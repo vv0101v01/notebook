@@ -189,8 +189,6 @@ test "[D-TwK0] 平凡 twist 給 representation ring：K₀ = Z^{|G|}；非退化
   let vec = Array::makei(nv, t => {
     let ac = t / (n - 1) + 1
     let bc = t % (n - 1) + 1
-    let av = [0, 0]
-    let _ = av
     let a0 = @twist.grp_of_code(g, ac)[0]
     let b1 = @twist.grp_of_code(g, bc)[1]
     a0 * b1 % 2
@@ -203,4 +201,23 @@ test "[D-TwK0] 平凡 twist 給 representation ring：K₀ = Z^{|G|}；非退化
   // 一個 2 維 ω-射影表示存在性（由 d²=4 ⟹ d=2）的等價條件：
   // A^ω 為 Mat_2(F_5)，中樞僅純量
   assert_eq(@twist.center_dim(o), 1)
+}
+
+///|
+/// [T-Twist-Accessors] ω 的欄位存取器（ell / field / ζ / 取值的內積一致性）：
+///   ζ = primitive_root(ell, p)、ω(a,b) 與 cochain_expand 展開的指數一致。
+test "omega accessors agree with construction" {
+  let g = @twist.grp([2, 2])
+  let nv = @twist.var_count(g)
+  let vec = Array::makei(nv, _t => 1)
+  let o = @twist.mk_omega(g, 2, 5, vec)
+  assert_eq(@twist.omega_ell(o), 2)
+  assert_eq(@twist.omega_field(o), 5)
+  assert_eq(@twist.omega_zeta(o), @twist.primitive_root(2, 5))
+  // ω(0,b) = 1 且 ζ^{ω(a,b)} 為單位根：ω(a,b) ∈ {0,1}
+  let gr = @twist.omega_group(o)
+  for a = 0; a < @twist.grp_order(gr); a = a + 1 {
+    let v = @twist.omega_get(o, a, 0)
+    assert_eq(@core.mod_pow(@twist.omega_zeta(o), v, 5), 1)
+  }
 }

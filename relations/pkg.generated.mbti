@@ -1,0 +1,70 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/relations"
+
+import {
+  "username/tensorlab/core",
+  "username/tensorlab/ledger",
+  "username/tensorlab/metric",
+  "username/tensorlab/tensor",
+}
+
+// Values
+pub fn check_contrast_partition(Array[Bool], Array[Bool]) -> Bool
+
+pub fn check_relative_scale_invariance(Array[Int32], Int32, Int32) -> Bool
+
+pub fn collect(Int32, Int32) -> Array[Rec]
+
+pub fn collect_into_ledger(@ledger.Ledger, Int32, Int32) -> (@ledger.Ledger, Int32)
+
+pub fn constant_ratio(Array[(Int32, Int32)]) -> (Int32, Int32)?
+
+pub fn contrast(Array[Bool], Array[Bool]) -> (Array[Bool], Array[Bool], Array[Bool])
+
+pub fn contrast_counts(Array[Bool], Array[Bool]) -> (Int32, Int32, Int32)
+
+pub fn dual_chain_cochain(@metric.MSpace, Int32, Int32) -> (Bool, Bool)
+
+pub fn dual_radon_injectivity(Int32, Int32) -> (Bool, Bool, Int32, Int32)
+
+pub fn dual_rank_nullity(@core.Mat, Int32) -> Bool
+
+pub fn dual_tensor_permutation(@tensor.Tensor3) -> Bool
+
+pub fn equivalences(Array[Array[Bool]]) -> Array[(Int32, Int32)]
+
+pub fn flip_edge_vertex_ratio(Int32) -> (Int32, Int32)
+
+pub fn implication_closure(Array[Array[Bool]], Int32) -> Array[Array[Bool]]
+
+pub fn implication_matrix(Array[Array[Bool]]) -> Array[Array[Bool]]
+
+pub fn implies(Array[Bool], Array[Bool]) -> Bool
+
+pub fn radon_total_relative(Int32, Int32, Array[Int32]) -> Int32?
+
+pub fn ratio(Int32, Int32) -> (Int32, Int32)
+
+pub fn rec(Int32, Int32, Int32, Bool) -> Rec
+
+pub fn rec_values(Rec) -> Array[Int32]
+
+pub fn relative(Int32, Int32, Int32) -> Int32
+
+pub fn relative_profile(Array[Int32], Int32) -> Array[Int32]
+
+pub fn tensor_predicate_table() -> Array[Array[Bool]]
+
+// Errors
+
+// Types and methods
+pub struct Rec {
+  kind : Int32
+  a : Int32
+  b : Int32
+  holds : Bool
+}
+
+// Type aliases
+
+// Traits

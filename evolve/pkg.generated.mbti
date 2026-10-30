@@ -2,40 +2,42 @@
 package "username/tensorlab/evolve"
 
 // Values
-pub fn check_derived_then_transfer(Ledger, Ledger, Int32, Bool, Array[Int32]) -> (Bool, Bool)
+pub fn check_derived_then_transfer(RowSet, RowSet, Int32, Bool, Array[Int32]) -> (Bool, Bool)
 
-pub fn derive_relations(Ledger, Int32, Bool) -> Array[Array[Int32]]
+pub fn derive_relations(RowSet, Int32, Bool) -> Array[Array[Int32]]
 
 pub fn dot(Array[Int32], Array[Int32]) -> Int32
 
-pub fn evolve_flips(Int32, Int32, Int32) -> Ledger
+pub fn evolve_flips(Int32, Int32, Int32) -> RowSet
 
-pub fn evolve_gauge(Int32, Int32, Int32) -> Ledger
+pub fn evolve_gauge(Int32, Int32, Int32) -> RowSet
 
-pub fn evolve_radon(Int32, Int32, Int32, Int32) -> Ledger
+pub fn evolve_radon(Int32, Int32, Int32, Int32) -> RowSet
 
-pub fn evolve_shear(Int32, Int32, Int32) -> Ledger
+pub fn evolve_shear(Int32, Int32, Int32) -> RowSet
 
 pub fn evolve_summary() -> Array[Bool]
 
-pub fn evolve_vr(Int32, Int32) -> Ledger
+pub fn evolve_vr(Int32, Int32) -> RowSet
 
-pub fn holds_exact(Ledger, Array[Int32]) -> Bool
+pub fn holds_exact(RowSet, Array[Int32]) -> Bool
 
-pub fn holds_mod(Ledger, Array[Int32], Int32) -> Bool
-
-pub fn ledger_len(Ledger) -> Int32
-
-pub fn ledger_of(Array[Array[Int32]]) -> Ledger
-
-pub fn ledger_with_const(Array[Array[Int32]]) -> Ledger
+pub fn holds_mod(RowSet, Array[Int32], Int32) -> Bool
 
 pub fn relation_derived(Array[Array[Int32]], Array[Int32], Int32) -> Bool
+
+pub fn rowset_len(RowSet) -> Int32
+
+pub fn rowset_of(Array[Array[Int32]]) -> RowSet
+
+pub fn rowset_rows(RowSet) -> Array[Array[Int32]]
+
+pub fn rowset_with_const(Array[Array[Int32]]) -> RowSet
 
 // Errors
 
 // Types and methods
-pub struct Ledger {
+pub struct RowSet {
   rows : Array[Array[Int32]]
 }
 

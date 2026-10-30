@@ -1,0 +1,95 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/spectral"
+
+import {
+  "username/tensorlab/core",
+  "username/tensorlab/hyper",
+  "username/tensorlab/twist",
+}
+
+// Values
+pub fn adjacency_of_graph(Int32, Array[(Int32, Int32)], Int32) -> @core.Mat
+
+pub fn char_poly(@core.Mat, Int32) -> Array[Int32]
+
+pub fn check_cayley_hamilton(@core.Mat, Int32) -> Bool
+
+pub fn check_char_poly_coeffs(@core.Mat, Int32) -> Bool
+
+pub fn check_chirality_formula(Int32, Int32) -> Bool
+
+pub fn check_cycle_laplacian_spectrum(Int32, Int32) -> Bool
+
+pub fn check_diagonalizable(@core.Mat, Int32) -> (Bool, Bool)
+
+pub fn check_idempotent_theorem(@core.Mat, Int32) -> (Bool, Bool, Int32, Int32)
+
+pub fn check_perm_char_poly(Array[Int32], Int32) -> Bool
+
+pub fn check_regular_rep_trace(@twist.Omega, Int32) -> (Int32, Int32)
+
+pub fn check_spectral_conjugation(@core.Mat, Int32) -> Bool
+
+pub fn check_spectral_tracedet(@core.Mat, Int32) -> Bool
+
+pub fn check_trace_square(@core.Mat, Int32) -> Bool
+
+pub fn chirality_matrix(Int32, Int32) -> @core.Mat
+
+pub fn chirality_spectrum(Int32, Int32) -> (Bool, Bool, Array[(Int32, Int32)])
+
+pub fn eigen_dim(@core.Mat, Int32, Int32) -> Int32
+
+pub fn graph_diam(Int32, Array[(Int32, Int32)]) -> Int32
+
+pub fn hyper_cell_matrix(@hyper.Hyper) -> @core.Mat
+
+pub fn isospectral_star_vs_cycle(Int32) -> (Bool, Int32, Int32)
+
+pub fn laplacian_of_graph(Int32, Array[(Int32, Int32)], Int32) -> @core.Mat
+
+pub fn mat_inverse(@core.Mat, Int32) -> @core.Mat?
+
+pub fn mat_trace(@core.Mat) -> Int32
+
+pub fn mat_trace_mod(@core.Mat, Int32) -> Int32
+
+pub fn poly_div_linear(Array[Int32], Int32, Int32) -> (Array[Int32], Int32)
+
+pub fn poly_eq(Array[Int32], Array[Int32]) -> Bool
+
+pub fn poly_eval(Array[Int32], Int32, Int32) -> Int32
+
+pub fn poly_matrix_eval(@core.Mat, Array[Int32], Int32) -> @core.Mat
+
+pub fn poly_mul(Array[Int32], Array[Int32], Int32) -> Array[Int32]
+
+pub fn projector(@core.Mat, Int32) -> @core.Mat?
+
+pub fn radon_gram_char_poly(Int32, Int32) -> (Array[Int32], Bool)
+
+pub fn regular_rep_matrix(@twist.Omega, Array[Int32], Int32) -> @core.Mat
+
+pub fn spectrum_of(@core.Mat, Int32) -> Spectrum
+
+pub fn spectrum_roots(@core.Mat, Int32) -> Array[(Int32, Int32)]
+
+pub fn spectrum_split(Spectrum) -> Bool
+
+// Errors
+
+// Types and methods
+pub struct Spectrum {
+  dim : Int32
+  split : Bool
+  trace : Int32
+  det : Int32
+  roots : Array[(Int32, Int32)]
+  sum_roots : Int32
+  prod_roots : Int32
+  total_mult : Int32
+}
+
+// Type aliases
+
+// Traits

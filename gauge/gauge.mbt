@@ -71,10 +71,24 @@ pub fn pauli_string(ops : Array[Int32], p : Int32) -> @core.Mat {
 }
 
 ///|
+/// [D-CliffAvail] JW 構造需要 Y = i·X·Z，其中 i² = −1 ∈ F_p ⟺ **p ≡ 1 (mod 4)**。
+///   若 p ≡ 3 (mod 4)，本專案**拒絕**構造（回傳空陣列），而不是像舊版那樣
+///   把 i 當成 0、靜默產生不滿足 Clifford 關係的矩陣。
+pub fn clifford_available(p : Int32) -> Bool {
+  match pauli_y(p) {
+    Some(_v) => true
+    None => false
+  }
+}
+
+///|
 /// [D-Gamma] Jordan–Wigner：m = ⌊d/2⌋ 個 qubit，2^m 維。
 ///   γ_{2j} = Z^{⊗j}⊗X⊗I^{⊗(m-1-j)}, γ_{2j+1} = Z^{⊗j}⊗Y⊗I^{⊗(m-1-j)}；
 ///   d 為奇數時再加 γ_{d-1} = Z^{⊗m}（體積元素，與所有 γ 反對易）。
 pub fn gamma_mats(d : Int32, p : Int32) -> Array[@core.Mat] {
+  if !clifford_available(p) {
+    return []
+  }
   let m = d / 2
   let out : Array[@core.Mat] = []
   let mut j = 0
@@ -112,6 +126,9 @@ pub fn gamma_mats(d : Int32, p : Int32) -> Array[@core.Mat] {
 /// [T-Cliff] Clifford 關係：{γ_a, γ_b} = 2δ_{ab}·I（在 char ≠ 2 的 F_p 中）。
 pub fn check_clifford(d : Int32, p : Int32) -> Bool {
   let gs = gamma_mats(d, p)
+  if gs.length() != d {
+    return false
+  }
   let m = gs.length()
   let sz = @core.int_pow(2, d / 2)
   let idn = @core.mat_identity(sz)
@@ -179,6 +196,10 @@ pub fn rho(
   p : Int32,
 ) -> @core.Mat {
   let sz = @core.int_pow(2, d / 2)
+  if gs.length() != d {
+    // 無 Clifford 實現（p ≡ 3 mod 4）：回傳零矩陣，呼叫者應先問 clifford_available
+    return @core.mat_make(sz, sz, 0)
+  }
   let g = @twist.grp(Array::makei(d, _ => 2))
   let av = @twist.grp_of_code(g, code)
   let mut acc = @core.mat_identity(sz)
@@ -197,6 +218,9 @@ pub fn rho(
 ///   ρ(a)ρ(b) = (−1)^{ω(a,b)} ρ(a+b)，並因此給出 Cl_d 的 2^{⌊d/2⌋} 維表示。
 pub fn check_clifford_is_twisted(d : Int32, p : Int32) -> Bool {
   let gs = gamma_mats(d, p)
+  if gs.length() != d {
+    return false
+  }
   let g = @twist.grp(Array::makei(d, _ => 2))
   let n = @twist.grp_order(g)
   let vec = clifford_cocycle_vec(d)
@@ -221,7 +245,11 @@ pub fn check_clifford_is_twisted(d : Int32, p : Int32) -> Bool {
       let lhs = @core.mat_mul(rho(gs, a, d, p), rho(gs, b, d, p), p)
       let sgn = omega(a, b)
       let rhs0 = rho(gs, ab, d, p)
-      let rhs = if sgn % 2 == 0 { rhs0 } else { @core.mat_scale(rhs0, p - 1, p) }
+      let rhs = if sgn % 2 == 0 {
+        rhs0
+      } else {
+        @core.mat_scale(rhs0, p - 1, p)
+      }
       if !@core.mat_eq_mod(lhs, rhs, p) {
         ok = false
       }
@@ -293,6 +321,9 @@ pub fn check_chirality(d : Int32, p : Int32) -> Bool {
 ///   γ'_a = γ_a ⊗ Z（a<d... 取 a ≤ d-1）, γ'_d = I ⊗ X, γ'_{d+1} = I ⊗ Y。
 pub fn check_bott_periodicity(d : Int32, p : Int32) -> Bool {
   let gs = gamma_mats(d, p)
+  if gs.length() != d {
+    return false
+  }
   let m = gs.length()
   let sz = @core.int_pow(2, d / 2)
   let idn = @core.mat_identity(sz)

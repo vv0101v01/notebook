@@ -322,7 +322,9 @@ pub fn mat_mul(a : Mat, b : Mat, p : Int32) -> Mat {
 /// [D-MatAdd] 逐分量相加（mod p）。
 pub fn mat_add(a : Mat, b : Mat, p : Int32) -> Mat {
   let f = mk_field(p)
-  mat_build(a.rows, a.cols, (i, j) => fld_add(f, mat_get(a, i, j), mat_get(b, i, j)))
+  mat_build(a.rows, a.cols, (i, j) => {
+    fld_add(f, mat_get(a, i, j), mat_get(b, i, j))
+  })
 }
 
 ///|

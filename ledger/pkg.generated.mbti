@@ -1,0 +1,78 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/ledger"
+
+import {
+  "username/tensorlab/evolve",
+}
+
+// Values
+pub fn append(Ledger, Int32, Array[Int32], Array[Int32]) -> Ledger
+
+pub fn append_derived(Ledger, Array[Int32], Array[Int32]) -> Ledger
+
+pub fn audit(Ledger, Int32, Bool) -> (Int32, Int32)
+
+pub fn corrupt(Ledger, Int32) -> Ledger
+
+pub fn derive_into(Ledger, Int32, Bool) -> (Ledger, Int32)
+
+pub fn empty() -> Ledger
+
+pub fn entries(Ledger) -> Array[Entry]
+
+pub fn entry_at(Ledger, Int32) -> Entry?
+
+pub fn fnv1a(Int64, Int32) -> Int64
+
+pub fn fork_index(Ledger, Ledger) -> Int32
+
+pub fn from_entries(Array[Entry]) -> Ledger
+
+pub fn hash_entry(Entry) -> Int64
+
+pub fn hash_values(Int64, Array[Int32]) -> Int64
+
+pub fn ingest_rows(Ledger, Array[Array[Int32]], Int32) -> (Ledger, Int32)
+
+pub fn ingest_rowset(Ledger, @evolve.RowSet, Int32) -> (Ledger, Int32)
+
+pub fn ledger_len(Ledger) -> Int32
+
+pub fn ledger_tip(Ledger) -> Int64
+
+pub fn observation_rows(Ledger) -> Array[Array[Int32]]
+
+pub fn observe(Ledger, Array[Int32]) -> Ledger
+
+pub fn replay(Array[Array[Int32]]) -> Ledger
+
+pub fn stats(Ledger) -> (Int32, Int32, Int32, Bool)
+
+pub fn verify(Ledger) -> Bool
+
+// Errors
+
+// Types and methods
+pub enum Cell {
+  Nil
+  Node(Entry, Cell)
+}
+
+pub struct Entry {
+  seq : Int32
+  kind : Int32
+  values : Array[Int32]
+  parents : Array[Int32]
+  prev : Int64
+  hash : Int64
+}
+
+pub struct Ledger {
+  head : Cell
+  len : Int32
+  tip : Int64
+}
+
+// Type aliases
+
+// Traits

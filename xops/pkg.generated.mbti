@@ -1,0 +1,43 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/xops"
+
+import {
+  "username/tensorlab/ahss",
+  "username/tensorlab/grotop",
+  "username/tensorlab/ss",
+}
+
+// Values
+pub fn alg_sum(@ahss.Alg, @ahss.Alg) -> @ahss.Alg
+
+pub fn chord_list(Int32) -> Array[(Int32, Int32)]
+
+pub fn forest_components(Int32, Int32) -> Array[Int32]
+
+pub fn forest_noncrossing(Int32, Int32) -> Bool
+
+pub fn mask_popcount(Int32) -> Int32
+
+pub fn page_dims_eq(@ss.Page, @ss.Page) -> Bool
+
+pub fn site_index(Int32, Int32) -> Int32
+
+pub fn xops_koszul_pair(Int32, Int32) -> (Int32, Int32)
+
+pub fn xops_nc_families(Int32) -> Array[(Int32, Array[Int32])]
+
+pub fn xops_nc_site(Int32, Int32) -> @grotop.Site
+
+pub fn xops_nc_topology(Int32, Int32) -> @grotop.Topology
+
+pub fn xops_twist_obstruction(@grotop.Presheaf, @grotop.Topology) -> Int32
+
+pub fn xops_twist_visible(@ahss.Alg) -> Bool
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

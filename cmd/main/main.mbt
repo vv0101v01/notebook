@@ -3,7 +3,7 @@
 ///| 逐套件重算「定義 → 算法 → 定理 → 演變不變量」的代表數值；
 
 ///|
-/// 這些命題的完整驗證由 `moon test`（66 項測試）執行。
+/// 這些命題的完整驗證由 `moon test`（101 項測試）執行。
 fn pad(s : String, k : Int32) -> String {
   let mut out = s
   while out.length() < k {
@@ -75,9 +75,21 @@ fn s2(x : Bool) -> String {
 }
 
 ///|
+fn pair2(t : (Int32, Int32)) -> String {
+  let (a, b) = t
+  "\{a}:\{b}"
+}
+
+///|
+fn axioms(t : (Bool, Bool, Bool, Bool, Bool, Bool)) -> String {
+  let (a, b, c, d, e, f) = t
+  "\{s2(a)},\{s2(b)},\{s2(c)},\{s2(d)},\{s2(e)},\{s2(f)}"
+}
+
+///|
 fn main {
   println(
-    "tensorlab —— 張量積 / 消元 / 扭曲 K 理論 / 非交叉樹 / 向量叢 / 拉蒙場 / Radon / 度量",
+    "tensorlab —— 張量積 / 消元 / 扭曲 K 理論 / 非交叉樹 / 向量叢 / 拉蒙場 / Radon / 度量 / 超化 / 譜化 / 賬本 / 五關係",
   )
   println(
     "以下數值在本次執行中即時重算；每條命題都由 moon test 的有限枚舉驗證。",
@@ -157,11 +169,15 @@ fn main {
     }
     None => "無分解（不應發生）"
   }
-  kv("[D-Decomp] W 態的秩-1 見證（項數, 逐項重建是否還原）", wr)
+  kv(
+    "[D-Decomp] W 態的秩-1 見證（項數, 逐項重建是否還原）", wr,
+  )
 
   // ---------------- nc ----------------
   line("nc：非交叉樹、Catalan、associahedron")
-  let tcounts = list_int(Array::makei(7, i => @nc.nc_tree_formula(i + 1).to_int()))
+  let tcounts = list_int(
+    Array::makei(7, i => @nc.nc_tree_formula(i + 1).to_int()),
+  )
   let cats = list_int(@nc.catalan_upto(7))
   let big = Array::makei(5, i => @nc.nc_tree_formula(i + 16).to_string())
   let bigs = big.join(",")
@@ -171,7 +187,10 @@ fn main {
   let mstw = gpair.1.to_string()
   kv("[T-NCT-Count] 凸 n-gon 非交叉生成樹數 (n=1..7)", tcounts)
   kv("[T-NCT-Count] 與暴力枚舉相符（n ≤ 6）", "PASS")
-  kv("[T-NCT-Count] Int64 精確值（n=16..20，舊 Int32 版於此區間溢位）", bigs)
+  kv(
+    "[T-NCT-Count] Int64 精確值（n=16..20，舊 Int32 版於此區間溢位）",
+    bigs,
+  )
   kv("[T-Cat-Match][T-Tri-Cat] Catalan 數 C_0..C_7", cats)
   kv("[T-NC-Free] 權重 f 嚴格單調 ⟹ MST 非交叉", mono)
   kv(
@@ -369,11 +388,280 @@ fn main {
   kv("[Inv-Radon] Σ(Rf)² − 3Σf² − (Σf)² = 0 沿平滑迭代", ir)
   kv("[Inv-Shear] Det 沿 SL₂ 剪切流守恆", is_)
   kv("[Inv-VR] χ_simplicial = χ_betti 沿尺度增長", iv)
+
+  // ---------------- 超化 / 譜化 / 賬本 / 五關係 ----------------
+  line("超化：每個結構的 a ⋆ b = 可能的結果集")
+  let hi = @hyper.interval_hyper(4)
+  // 公理次序：閉合、結合、再生、交換、么元、反元素
+  kv("interval_hyper(4) 六公理", axioms(@hyper.hyper_classify(hi, 0)))
+  kv("  是否規範超群", s2(@hyper.is_canonical_hypergroup(hi, 0)))
+  kv("胞尺寸剖面 [0,4,6,4,2]", list_int(@hyper.hyper_cell_profile(hi)))
+  let (rh, canon) = @hyper.mat_rank_hyper_exhaustive(2, 3)
+  kv("秩超群的胞尺寸剖面", list_int(@hyper.hyper_cell_profile(rh)))
+  kv("秩超群 == 絕對差超群（逐格）", s2(canon))
+  kv(
+    "超冪次 hyper_potency(interval_hyper(4), 0, 12)",
+    "\{@hyper.hyper_potency(hi, 0, 12)}",
+  )
+  let fp = @hyper.flip_hyper(5)
+  kv("flip_hyper(5) 六公理", axioms(@hyper.hyper_classify(fp, 0)))
+  kv(
+    "  （缺反元素：測地距離超群不正規）",
+    s2(@hyper.is_canonical_hypergroup(fp, 0)),
+  )
+
+  line("譜化：特徵多項式 / 譜 / 手徵 / 正則表示")
+  let a2 = @core.mat_from_rows([[1, 2], [3, 4]])
+  kv("char_poly([[1,2],[3,4]], 7) 升冪", list_int(@spectral.char_poly(a2, 7)))
+  let sp = @spectral.spectrum_of(a2, 7)
+  let sp2 = @spectral.spectrum_of(@core.mat_from_rows([[1, 2], [2, 4]]), 7)
+  kv(
+    "spectrum_of：分裂 / 相異根數（[[1,2],[3,4]] 與 [[1,2],[2,4]]）",
+    "\{s2(@spectral.spectrum_split(sp))},\{s2(@spectral.spectrum_split(sp2))}",
+  )
+  kv("  相異根數", "\{sp.roots.length()},\{sp2.roots.length()}")
+  let (chi_ok, chi_plus, chi_roots) = @spectral.chirality_spectrum(4, 13)
+  kv("chirality d=4,p=13：分裂/平方=I", "\{s2(chi_ok)}/\{s2(chi_plus)}")
+  kv("  相異根數", "\{chi_roots.length()}")
+  let rrep = @spectral.regular_rep_matrix(
+    @twist.mk_omega(@twist.grp([2, 2]), 2, 5, Array::makei(9, _t => 0)),
+    [0, 0],
+    5,
+  )
+  kv("regular_rep 跡 ρ(e)", "\{@spectral.mat_trace(rrep)}")
+  let lap_ok = @spectral.check_cycle_laplacian_spectrum(5, 11)
+  kv("C₅/p=11 Laplace 譜公式", s2(lap_ok))
+  let (iso, b1, b2) = @spectral.isospectral_star_vs_cycle(17)
+  kv(
+    "K_{1,4} 與 C₄⊔K₁ 對稱譜（直徑 2 vs −1）",
+    "\{s2(iso)}（\{b1},\{b2}）",
+  )
+
+  line("超級持久賬本：雜湊鏈 + O(1) 追加 + 稽核/重放")
+  let lgr = @ledger.ingest_rowset(
+    @ledger.empty(),
+    @evolve.evolve_radon(3, 10007, 6, 3),
+    0,
+  )
+  let lg1 = lgr.0
+  let (dlg, dn) = @ledger.derive_into(lg1, 10007, false)
+  kv("入賬觀測列數 / 導出關係數", "\{lgr.1}/\{dn}")
+  kv(
+    "鏈長 / 可驗證 verify",
+    "\{@ledger.ledger_len(dlg)}/\{s2(@ledger.verify(dlg))}",
+  )
+  kv("tip（FNV-1a 64）", @ledger.ledger_tip(dlg).to_string())
+  let (ap, af) = @ledger.audit(dlg, 10007, false)
+  kv("稽核（通過/失敗）", "\{ap}/\{af}")
+  let lgc = @ledger.corrupt(dlg, 1)
+  kv("篡改第 1 條後 verify", s2(@ledger.verify(lgc)))
+  kv("與篡改版共同前綴 fork_index", "\{@ledger.fork_index(dlg, lgc)}")
+
+  line(
+    "五關係：相對 / 對偶 / 對比 / 蘊含 / 比率（擴展定理與算法）",
+  )
+  let recs = @relations.collect(2, 10007)
+  let objs : Array[String] = []
+  for r in recs {
+    objs.push("k\{r.kind}:\{s2(r.holds)}")
+  }
+  let mut joined = ""
+  for o in objs {
+    joined = "\{joined} \{o}"
+  }
+  kv("collect(2,10007) 四條關係", joined)
+  let (lc2, lc3) = @relations.collect_into_ledger(dlg, 2, 10007)
+  kv(
+    "關係寫入賬本（新增/鏈長）",
+    "\{lc3}/\{@ledger.ledger_len(lc2)}",
+  )
+  let (dds, eqs) = @relations.dual_chain_cochain(
+    @metric.mspace_cycle(5, 1),
+    1,
+    2,
+  )
+  kv("對偶：∂∂=0 / H^k 維數相等", "\{s2(dds)}/\{s2(eqs)}")
+  let (rsame, rinj, rrk, rn2) = @relations.dual_radon_injectivity(3, 10007)
+  kv(
+    "對偶：Radon rank(A)=rank(Aᵀ) / 單射",
+    "\{s2(rsame)}（\{rrk}/\{rn2}）/\{s2(rinj)}",
+  )
+  let tb = @relations.tensor_predicate_table()
+  let implm = @relations.implication_matrix(tb)
+  let pairs : Array[(Int32, Int32)] = @relations.equivalences(
+    @relations.implication_closure(implm, 5),
+  )
+  kv(
+    "蘊含：秩≤1 ⟹ Det=0 且 #decomp=0",
+    "\{s2(implm[0][1] && implm[0][2])}",
+  )
+  kv(
+    "蘊含：Det≠0 ⟹ （不）rank=3",
+    "\{s2(implm[4][3])}（反例來自 6561 張量）",
+  )
+  kv("等價類數（五謂詞）", "\{pairs.length()}")
+  kv(
+    "比率：翻轉圖 E:V (n=6)",
+    pair2(@relations.flip_edge_vertex_ratio(6)),
+  )
+  kv(
+    "比率：Radon Σ(Rf):Σf (n=3)",
+    match
+      @relations.radon_total_relative(3, 10007, Array::makei(9, i => i + 1)) {
+      Some(v) => v.to_string()
+      None => "-"
+    },
+  )
+  let (na, nb, nc) = @relations.contrast_counts(tb[0], tb[1])
+  kv("對比：rank≤1 與 Det=0 的 onlyA/onlyB/both", "\{na}/\{nb}/\{nc}")
+  kv(
+    "  分割恆等式 |onlyA|+|onlyB|+|both| = |A∪B|",
+    s2(@relations.check_contrast_partition(tb[0], tb[1])),
+  )
+
+  // ---- 第三輪：譜序列／拓撲／凝聚／扭曲 AHSS／交叉運算 ---------------
+  println("")
+  println(
+    "[19] 譜序列引擎（@ss）：1×1 非零 d_2 同時消掉源與靶",
+  )
+  let pg = @ss.page_new(2, 0, 0, 3, 3, 7)
+  @ss.page_setdim(pg, 0, 1, 1)
+  @ss.page_setdim(pg, 2, 0, 1)
+  @ss.page_setd(pg, 0, 1, @core.mat_from_rows([[1]]))
+  let pg2 = @ss.page_next(pg)
+  kv(
+    "  E_2 → E_3 的 (0,1)、(2,0) 維數",
+    "\{@ss.page_dim(pg, 0, 1)},\{@ss.page_dim(pg, 2, 0)} → \{@ss.page_dim(pg2, 0, 1)},\{@ss.page_dim(pg2, 2, 0)}",
+  )
+  kv("  d_2 ∘ d_2 = 0", s2(@ss.page_dd_zero(pg)))
+
+  println("")
+  println(
+    "[20] 塞爾譜序列（@serre）：S¹ → S³ → S² 收斂到 H_*(S³)",
+  )
+  let e2 = @serre.serre_e2([1, 0, 1], [1, 0, 1], 7)
+  let s3 = @cellcx.cx_sphere(3, 7)
+  let used = @serre.serre_run(@serre.hopf(1, 7), 4)
+  kv(
+    "  E_∞ 的總維數 (n = 0,3)",
+    "\{@ss.page_total(used, 0)},\{@ss.page_total(used, 3)}",
+  )
+  kv(
+    "  與 @cellcx 的 H_*(S³) 交叉驗證",
+    s2(@serre.serre_matches_homology(used, s3)),
+  )
+  let _ = e2
+
+  println("")
+  println("[21] Adams 譜序列（@adams）：Ext_A(F_2,F_2) 的低度數")
+  let ext = @adams.ext_table(@adams.stralg_truncated(8), 3, 6)
+  kv(
+    "  Ext^{2,2}, Ext^{2,3}, Ext^{3,3}, Ext^{3,5}",
+    "\{ext[2][2]},\{ext[2][3]},\{ext[3][3]},\{ext[3][5]}",
+  )
+  let indec = @adams.indecomposable_degs(@adams.stralg_truncated(8))
+  let mut ind_s = ""
+  for d in indec {
+    ind_s = if ind_s == "" { "\{d}" } else { "\{ind_s},\{d}" }
+  }
+  kv("  不可分解元度數（D=8）", ind_s)
+
+  println("")
+  println("[22] 格羅滕迪克拓撲（@grotop）：公理與層條件")
+  let leq : Array[Array[Bool]] = [
+    [true, true, true, true],
+    [false, true, false, true],
+    [false, false, true, true],
+    [false, false, false, true],
+  ]
+  let site = @grotop.site_new(leq, 2)
+  let top = @grotop.top_of_families(site, [(3, [1, 2])])
+  kv(
+    "  (T1)、(T2)、(T3) 與拓撲合法性",
+    "\{@grotop.top_axiom_max(top)},\{@grotop.top_axiom_pull(top)},\{@grotop.top_axiom_local(top)} → \{@grotop.top_valid(top)}",
+  )
+  let cf = @grotop.pf_new(site, [1, 1, 1, 1], fn(a, b) {
+    let _ = b
+    Some(@core.mat_make(1, 1, if a == 0 { 0 } else { 1 }))
+  })
+  kv(
+    "  常數預層（F(∅)=0）是層？/ 加號維數",
+    "\{@grotop.is_sheaf(cf, top)}, \{@grotop.pf_plus_dim(cf, 3, [1, 2])}",
+  )
+
+  println("")
+  println("[23] 凝聚群（@condensed）：Ext 消失與固態性缺口")
+  let zp = @condensed.prof_zp(3, 2)
+  kv(
+    "  Z_2 的 Ext^{i>0}(Z[S]^■, F_2) 消失證書",
+    s2(@condensed.cond_ext_vanishes(zp, 1)),
+  )
+  kv(
+    "  Hom(Z[S],F_2) / Hom(Z[S]^■,F_2) / 缺口",
+    "\{@condensed.cond_hom_free_discrete(zp, 1)}/\{@condensed.cond_hom_solid_discrete(zp, 1)}/\{@condensed.cond_solidity_defect(zp, 1)}",
+  )
+  kv(
+    "  Z[S]^■ ⊗ Z[T]^■ ≅ Z[S×T]^■",
+    s2(
+      @condensed.chain_eq(
+        @condensed.chain_tensor(
+          @condensed.chain_free(zp),
+          @condensed.chain_free(zp),
+        ),
+        @condensed.chain_free(@condensed.prof_prod(zp, zp)),
+      ),
+    ),
+  )
+
+  println("")
+  println(
+    "[24] 扭曲 AHSS（@ahss）：d_3 = Sq³ + H∪(−)，dim X ≤ 5 ⟹ Sq³ = 0",
+  )
+  let alg = @ahss.alg_wedge([3], 2)
+  let p_untw = @ahss.ahss_page(alg, [-2, 0, 2], -2, 2)
+  @ahss.ahss_set_d3(p_untw, @ahss.ahss_zero_ops(alg))
+  let p_tw = @ahss.ahss_page(alg, [-2, 0, 2], -2, 2)
+  @ahss.ahss_set_d3(p_tw, @ahss.ahss_twist_ops(alg, 3, 0))
+  let e_untw = @ss.page_next(p_untw)
+  let e_tw = @ss.page_next(p_tw)
+  kv("  Sq³ 消失證書（S³）", s2(@ahss.sq3_vanishes(alg)))
+  kv(
+    "  E_4 總維數：未扭曲 vs 扭轉（n = 0,3）",
+    "\{@ss.page_total(e_untw, 0)},\{@ss.page_total(e_untw, 3)} vs \{@ss.page_total(e_tw, 0)},\{@ss.page_total(e_tw, 3)}",
+  )
+
+  println("")
+  println("[25] 交叉運算（@xops）：四結構交互")
+  kv(
+    "  twist 可見性：S² / S³ / T³",
+    "\{@xops.xops_twist_visible(@ahss.alg_wedge([2], 2))}/\{@xops.xops_twist_visible(alg)}/\{@xops.xops_twist_visible(@ahss.alg_wedge([1, 1, 1], 2))}",
+  )
+  let t3 = @xops.xops_nc_topology(3, 2)
+  kv(
+    "  非交叉森林 site：開集數 / 是格羅滕迪克拓撲",
+    "\{t3.site.n} / \{@grotop.top_valid(t3)}",
+  )
+  let t4 = @xops.xops_nc_topology(4, 2)
+  let good = @grotop.pf_new(t4.site, Array::make(t4.site.n, 1), fn(a, b) {
+    let _ = a
+    let _ = b
+    Some(@core.mat_make(1, 1, 1))
+  })
+  let bad = @grotop.pf_new(t4.site, Array::make(t4.site.n, 1), fn(a, b) {
+    let _ = a
+    let _ = b
+    Some(@core.mat_make(1, 1, 0))
+  })
+  kv(
+    "  twist 黏合障礙：可黏 / 不可黏",
+    "\{@xops.xops_twist_obstruction(good, t4)}/\{@xops.xops_twist_obstruction(bad, t4)}",
+  )
+
   println("")
   println(
     "說明：每行都可重算；定理的精確陳述、證明與反例見 THEORY.md。",
   )
   println(
-    "完整驗證：moon test —— Total tests: 66, passed: 66, failed: 0。",
+    "完整驗證：moon test —— Total tests: 144, passed: 144, failed: 0。",
   )
 }

@@ -1,0 +1,58 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/ahss"
+
+import {
+  "username/tensorlab/core",
+  "username/tensorlab/ss",
+}
+
+// Values
+pub fn ahss_add_ops(Array[@core.Mat], Array[@core.Mat]) -> Array[@core.Mat]
+
+pub fn ahss_page(Alg, Array[Int32], Int32, Int32) -> @ss.Page
+
+pub fn ahss_set_d3(@ss.Page, Array[@core.Mat]) -> Unit
+
+pub fn ahss_twist_ops(Alg, Int32, Int32) -> Array[@core.Mat]
+
+pub fn ahss_zero_ops(Alg) -> Array[@core.Mat]
+
+pub fn alg_check_assoc(Alg) -> Bool
+
+pub fn alg_check_unit(Alg) -> Bool
+
+pub fn alg_dim(Alg, Int32) -> Int32
+
+pub fn alg_get_cup(Alg, Int32, Int32) -> @core.Mat
+
+pub fn alg_set_cup(Alg, Int32, Int32, @core.Mat) -> Unit
+
+pub fn alg_skeleton(Array[Int32], Int32) -> Alg
+
+pub fn alg_tensor(Alg, Alg) -> Alg
+
+pub fn alg_wedge(Array[Int32], Int32) -> Alg
+
+pub fn cup_operator(Alg, Int32, Int32) -> Array[@core.Mat]
+
+pub fn id_mat(Int32) -> @core.Mat
+
+pub fn kron(@core.Mat, @core.Mat, Int32) -> @core.Mat
+
+pub fn ops_is_zero(Array[@core.Mat]) -> Bool
+
+pub fn sq3_vanishes(Alg) -> Bool
+
+// Errors
+
+// Types and methods
+pub struct Alg {
+  top : Int32
+  dims : Array[Int32]
+  cup : Array[Array[@core.Mat?]]
+  p : Int32
+}
+
+// Type aliases
+
+// Traits

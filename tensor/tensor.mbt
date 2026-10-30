@@ -286,9 +286,7 @@ pub fn check_subadditivity(
       (Some(rs), Some(rt)) => {
         let sum = t3_add(s, t)
         match tensor_rank(sum, tab, 3) {
-          Some(rsm) => if rsm > rs + rt {
-            ok = false
-          }
+          Some(rsm) => if rsm > rs + rt { ok = false }
           None => ok = false
         }
       }
@@ -312,7 +310,9 @@ pub fn hyperdet222(t : Tensor3) -> Int32 {
   // 四個因子相乘可達 p⁴，故內部一律用 Int64；p ≤ safe_prime_bound()=46337 時
   // 逐步 red() 約化，中間值不超過 46337²，絕對不會溢出。
   let p64 = t.field.to_int64()
-  let g = fn(i : Int32, j : Int32, k : Int32) -> Int64 { t3_get(t, i, j, k).to_int64() }
+  let g = fn(i : Int32, j : Int32, k : Int32) -> Int64 {
+    t3_get(t, i, j, k).to_int64()
+  }
   let red = fn(x : Int64) -> Int64 {
     let r = x % p64
     if r < 0L {
@@ -329,23 +329,23 @@ pub fn hyperdet222(t : Tensor3) -> Int32 {
   // 4 條空間對角線（互補頂點對）
   let dg = red(
     sq(mul(g(0, 0, 0), g(1, 1, 1))) +
-      sq(mul(g(0, 0, 1), g(1, 1, 0))) +
-      sq(mul(g(0, 1, 0), g(1, 0, 1))) +
-      sq(mul(g(0, 1, 1), g(1, 0, 0))),
+    sq(mul(g(0, 0, 1), g(1, 1, 0))) +
+    sq(mul(g(0, 1, 0), g(1, 0, 1))) +
+    sq(mul(g(0, 1, 1), g(1, 0, 0))),
   )
   // 6 個「矩形對」（每條對角線選兩個）
   let rc = red(
     mono4(g(0, 0, 0), g(0, 0, 1), g(1, 1, 0), g(1, 1, 1)) +
-      mono4(g(0, 0, 0), g(0, 1, 0), g(1, 0, 1), g(1, 1, 1)) +
-      mono4(g(0, 0, 0), g(0, 1, 1), g(1, 0, 0), g(1, 1, 1)) +
-      mono4(g(0, 0, 1), g(0, 1, 0), g(1, 0, 1), g(1, 1, 0)) +
-      mono4(g(0, 0, 1), g(0, 1, 1), g(1, 0, 0), g(1, 1, 0)) +
-      mono4(g(0, 1, 0), g(0, 1, 1), g(1, 0, 0), g(1, 0, 1)),
+    mono4(g(0, 0, 0), g(0, 1, 0), g(1, 0, 1), g(1, 1, 1)) +
+    mono4(g(0, 0, 0), g(0, 1, 1), g(1, 0, 0), g(1, 1, 1)) +
+    mono4(g(0, 0, 1), g(0, 1, 0), g(1, 0, 1), g(1, 1, 0)) +
+    mono4(g(0, 0, 1), g(0, 1, 1), g(1, 0, 0), g(1, 1, 0)) +
+    mono4(g(0, 1, 0), g(0, 1, 1), g(1, 0, 0), g(1, 0, 1)),
   )
   // 2 個正四面體（偶／奇權重頂點集）
   let tet = red(
     mono4(g(0, 0, 0), g(0, 1, 1), g(1, 0, 1), g(1, 1, 0)) +
-      mono4(g(0, 0, 1), g(0, 1, 0), g(1, 0, 0), g(1, 1, 1)),
+    mono4(g(0, 0, 1), g(0, 1, 0), g(1, 0, 0), g(1, 1, 1)),
   )
   red(dg - 2L * rc + 4L * tet).to_int()
 }
@@ -403,7 +403,6 @@ pub struct Rank1Table {
   list : Array[Array[Int32]]
 }
 
-
 ///|
 /// /// **演算法 Rank1Enum**：列出全部非零秩-1 張量並建表。
 pub fn rank1_table(d : Int32, p : Int32) -> Rank1Table {
@@ -422,7 +421,9 @@ pub fn rank1_table(d : Int32, p : Int32) -> Rank1Table {
             for k = 0; k < d; k = k + 1 {
               // 三個因子相乘可達 p³ ⇒ 必須逐步約化（p ≥ 1291 時直接相乘會溢出 Int32）
               flat[(i * d + j) * d + k] = @core.fld_mul(
-                fld, @core.fld_mul(fld, vs[a][i], vs[b][j]), vs[c][k],
+                fld,
+                @core.fld_mul(fld, vs[a][i], vs[b][j]),
+                vs[c][k],
               )
             }
           }
@@ -487,12 +488,15 @@ pub fn is_rank1(t : Tensor3) -> Bool {
 /// /// 有序分解計數：#{ A 秩-1非零 : T − A 亦秩-1非零 }。
 pub fn rank2_ordered_pairs(t : Tensor3, tab : Rank1Table) -> Int32 {
   let p = t.field
+  // 熱路徑：`Field` 在內層迴圈外建一次（原本每個元素都重造一個 Field，
+  // 而 `relations.tensor_predicate_table` 會在 6561 個張量上反覆呼叫這裡）。
+  let fld = @core.mk_field(p)
   let mut cnt = 0
   for i = 0; i < tab.list.length(); i = i + 1 {
     let a = tab.list[i]
     let b : Array[Int32] = Array::make(a.length(), 0)
     for j = 0; j < a.length(); j = j + 1 {
-      b[j] = @core.fld_norm(@core.mk_field(p), t.data[j] - a[j])
+      b[j] = @core.fld_norm(fld, t.data[j] - a[j])
     }
     let code_b = vec_code(b, p)
     if tab.flags[code_b] && !b.all(x => x == 0) {

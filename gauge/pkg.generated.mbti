@@ -26,6 +26,8 @@ pub fn check_holonomy_invariant(Lattice, Array[Int32], Array[Int32]) -> Bool
 
 pub fn check_moduli_bijective(Lattice) -> (Bool, Int32)
 
+pub fn clifford_available(Int32) -> Bool
+
 pub fn clifford_cocycle_vec(Int32) -> Array[Int32]
 
 pub fn code_of(Lattice, Array[Int32]) -> Int32

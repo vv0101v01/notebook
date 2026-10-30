@@ -1,0 +1,64 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/condensed"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn chain_eq(Chain, Chain) -> Bool
+
+pub fn chain_free(Prof) -> Chain
+
+pub fn chain_func(Prof, Int32) -> Chain
+
+pub fn chain_lim_dim(Chain) -> Int32
+
+pub fn chain_ml(Chain, Bool) -> Bool
+
+pub fn chain_tensor(Chain, Chain) -> Chain
+
+pub fn chain_total(Chain) -> Int32
+
+pub fn cond_ext_vanishes(Prof, Int32) -> Bool
+
+pub fn cond_hom_free_discrete(Prof, Int32) -> Int32
+
+pub fn cond_hom_solid_discrete(Prof, Int32) -> Int32
+
+pub fn cond_solidity_defect(Prof, Int32) -> Int32
+
+pub fn cond_solidity_defect_profinite(Prof, Int32) -> Int32
+
+pub fn prof_cantor(Int32, Int32) -> Prof
+
+pub fn prof_new(Array[Int32], Array[@core.Mat], Int32) -> Prof
+
+pub fn prof_ninf(Int32, Int32) -> Prof
+
+pub fn prof_prod(Prof, Prof) -> Prof
+
+pub fn prof_pt(Int32) -> Prof
+
+pub fn prof_valid(Prof) -> Bool
+
+pub fn prof_zp(Int32, Int32) -> Prof
+
+// Errors
+
+// Types and methods
+pub struct Chain {
+  dims : Array[Int32]
+  trans : Array[@core.Mat]
+  p : Int32
+}
+
+pub struct Prof {
+  sizes : Array[Int32]
+  maps : Array[@core.Mat]
+  p : Int32
+}
+
+// Type aliases
+
+// Traits

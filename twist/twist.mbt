@@ -336,6 +336,27 @@ pub fn mk_omega(g : Grp, ell : Int32, p : Int32, vec : Array[Int32]) -> Omega {
 }
 
 ///|
+/// [D-OmegaAcc] 觀察器：讓下游套件（spectral / ledger）能走訪 G、ℓ、ζ、p。
+pub fn omega_group(o : Omega) -> Grp {
+  o.g
+}
+
+///|
+pub fn omega_field(o : Omega) -> Int32 {
+  o.field
+}
+
+///|
+pub fn omega_ell(o : Omega) -> Int32 {
+  o.ell
+}
+
+///|
+pub fn omega_zeta(o : Omega) -> Int32 {
+  o.zeta
+}
+
+///|
 pub fn omega_get(o : Omega, ac : Int32, bc : Int32) -> Int32 {
   co_get(grp_order(o.g), o.w, ac, bc)
 }

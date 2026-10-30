@@ -1,0 +1,51 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/dtensor"
+
+import {
+  "username/tensorlab/core",
+}
+
+// Values
+pub fn find_basis(Array[(Int32, Int32)], Int32, Int32) -> Int32
+
+pub fn koszul_basis(PolyAlg) -> Array[Array[Array[(Int32, Int32)]]]
+
+pub fn koszul_d(PolyAlg, Array[Array[Array[(Int32, Int32)]]], Array[Array[Int32]], Int32, Int32) -> @core.Mat
+
+pub fn koszul_d_reduced(PolyAlg, Int32, Int32) -> @core.Mat
+
+pub fn koszul_dd_zero(PolyAlg) -> Bool
+
+pub fn koszul_exact(PolyAlg) -> Bool
+
+pub fn mono_deg(Array[Int32]) -> Int32
+
+pub fn monomials(Int32, Int32) -> Array[Array[Int32]]
+
+pub fn poly_alg(Int32, Int32) -> PolyAlg
+
+pub fn reduced_basis(PolyAlg, Int32) -> Array[Int32]
+
+pub fn subsets_of_size(Int32, Int32) -> Array[Int32]
+
+pub fn tor_basis(PolyAlg, Int32) -> Array[(Int32, Int32)]
+
+pub fn tor_dim(PolyAlg, Int32, Int32) -> Int32
+
+pub fn tor_reduced_d(PolyAlg, Int32) -> @core.Mat
+
+pub fn tor_table(PolyAlg, Int32, Int32) -> Array[Array[Int32]]
+
+pub fn tor_total(PolyAlg, Int32, Int32) -> Int32
+
+// Errors
+
+// Types and methods
+pub struct PolyAlg {
+  g : Int32
+  n : Int32
+}
+
+// Type aliases
+
+// Traits

@@ -7,6 +7,18 @@ import {
   "username/tensorlab/radon",
   "username/tensorlab/metric",
   "username/tensorlab/evolve",
+  "username/tensorlab/hyper",
+  "username/tensorlab/spectral",
+  "username/tensorlab/ledger",
+  "username/tensorlab/relations",
+  "username/tensorlab/cellcx",
+  "username/tensorlab/ss",
+  "username/tensorlab/serre",
+  "username/tensorlab/adams",
+  "username/tensorlab/grotop",
+  "username/tensorlab/condensed",
+  "username/tensorlab/ahss",
+  "username/tensorlab/xops",
 }
 
 pkgtype(kind: "executable")

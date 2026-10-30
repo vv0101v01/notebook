@@ -1,0 +1,41 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/serre"
+
+import {
+  "username/tensorlab/cellcx",
+  "username/tensorlab/core",
+  "username/tensorlab/ss",
+}
+
+// Values
+pub fn coinvariants_dim(Int32, Array[@core.Mat], Int32) -> Int32
+
+pub fn hopf(Int32, Int32) -> @ss.Page
+
+pub fn invariants_dim(Int32, Array[@core.Mat], Int32) -> Int32
+
+pub fn neg_one(Int32) -> @core.Mat
+
+pub fn one_mat(Int32) -> @core.Mat
+
+pub fn serre_degenerate_two_columns(@ss.Page) -> Bool
+
+pub fn serre_e2(Array[Int32], Array[Int32], Int32) -> @ss.Page
+
+pub fn serre_matches_homology(@ss.Page, @cellcx.CellCx) -> Bool
+
+pub fn serre_run(@ss.Page, Int32) -> @ss.Page
+
+pub fn serre_sphere_converges(Int32, Int32, Int32) -> Bool
+
+pub fn sphere_betti(Int32) -> Array[Int32]
+
+pub fn sphere_bundle(Int32, Int32, Int32) -> @ss.Page
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+
+// Traits

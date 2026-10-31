@@ -735,9 +735,90 @@ fn main {
 
   println("")
   println(
+    "[29] 逐結構範疇化（@catify）：公理 + 去範疇化 + 基數",
+  )
+  let g2 = @twist.grp([2])
+  let bg = @catify.cat_from_group(g2, 2)
+  kv(
+    "  BG(Z/2) 是範疇？/ decat",
+    "\{@catify.cat_is_category(bg)} / \{@catify.decat(bg)}",
+  )
+  let cardbg = @catify.cat_groupoid_cardinality(bg)
+  kv("  BG(Z/2) 的群胚基數", "\{cardbg.num}/\{cardbg.den}（= 1/|G|）")
+  let s2site : Array[Array[Bool]] = [
+    [true, true, true, true],
+    [false, true, false, true],
+    [false, false, true, true],
+    [false, false, false, true],
+  ]
+  let thin = @catify.cat_thin(s2site, 2)
+  kv(
+    "  site 的 thin 範疇：是範疇 / 合成全定義",
+    "\{@catify.cat_is_category(thin)} / \{@catify.cat_composition_total(thin)}",
+  )
+  let non_trans : Array[Array[Bool]] = [
+    [true, false, false, false],
+    [false, true, false, true],
+    [false, false, true, false],
+    [false, false, true, true],
+  ]
+  let badcat = @catify.cat_thin(non_trans, 2)
+  kv(
+    "  非傳遞關係：結合律（會假通過）/ 合成全定義",
+    "\{@catify.cat_assoc(badcat)} / \{@catify.cat_composition_total(badcat)}",
+  )
+  // 類群胚：canon 的等價類 = 群胚的同構類
+  let rk : Array[Array[Int32]] = []
+  for code = 0; code < 64; code = code + 1 {
+    let m = @core.mat_make(2, 3, 0)
+    let mut c = code
+    for i = 0; i < 2; i = i + 1 {
+      for j = 0; j < 3; j = j + 1 {
+        m.data[i * 3 + j] = c % 2
+        c = c / 2
+      }
+    }
+    rk.push(@catify.canon_flatten(@canon.canon_rref(m, 2)))
+  }
+  kv(
+    "  RREF 類群胚的 decat",
+    "\{@catify.decat(@catify.cat_class_groupoid(rk))}（= canon 類數 15）",
+  )
+  // 作用群胚：基數 = |X|/|G|
+  let act_triv = fn(k : Int32, x : Int32) {
+    let _ = k
+    x
+  }
+  let ag = @catify.cat_action_groupoid(g2, 3, act_triv, 2)
+  let card = @catify.cat_groupoid_cardinality(ag)
+  kv(
+    "  Z/2 平凡作用於 3 點：軌道數 / 群胚基數",
+    "\{@catify.decat(ag)} / \{card.num}/\{card.den}（= |X|/|G|）",
+  )
+  let faces : Array[Array[Int32]] = [
+    [0],
+    [1],
+    [2],
+    [0, 1],
+    [1, 2],
+    [0, 2],
+    [0, 1, 2],
+  ]
+  let fp = @catify.cat_face_poset(faces, 2)
+  kv(
+    "  三角形的面偏序：是範疇 / decat",
+    "\{@catify.cat_is_category(fp)} / \{@catify.decat(fp)}",
+  )
+  kv(
+    "  分次歐拉：E_2 vs E_∞（Hopf）",
+    "\{@catify.graded_euler([1, 1, 1, 1])} vs \{@catify.graded_euler([1, 0, 0, 1])}",
+  )
+
+  println("")
+  println(
     "說明：每行都可重算；定理的精確陳述、證明與反例見 THEORY.md。",
   )
   println(
-    "完整驗證：moon test —— Total tests: 163, passed: 163, failed: 0。",
+    "完整驗證：moon test —— Total tests: 176, passed: 176, failed: 0。",
   )
 }

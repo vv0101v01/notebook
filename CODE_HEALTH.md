@@ -278,3 +278,46 @@ moon run cmd/main            # 171 行（新增 §28 區段）
 逐包：core 10、tensor 12、nc 10、twist 8、radon 5、gauge 9、metric 6、evolve 7、hyper 7、spectral 12、
 ledger 7、relations 8、cellcx 3、ss 5、serre 4、adams 5、grotop 6、condensed 5、ahss 6、dtensor 4、xops 5、
 **canon 19**。
+
+---
+
+## 8. 第五輪健檢（範疇化之後）
+
+### 8.1 除錯
+
+| # | 症狀 | 根因 | 修法 |
+|---|---|---|---|
+| 1 | `cat_units` 對「無單位態射」的範疇 panic（`Array::at` 越界） | `mu[i][i][j]` 在 `Hom(i,i) = 0` 時是 0 欄矩陣，仍去索引那一欄 | 先判 `cols == 0`：直接判單位律失敗，再進入迴圈 |
+| 2 | 非傳遞關係的 thin 範疇「結合律通過」 | **我原本的定理寫錯了**：線性範疇允許零合成，兩邊同時變零 ⟹ 結合律被遮住 | 新增 `[T-Cat-Total]` `cat_composition_total`；並保留**兩個**反例：一個結合律抓到、一個只有 new 判準抓到 |
+| 3 | 非自反關係的測試一度斷言 `composition_total = false` 卻得 true | 非自反破壞的是**單位律**，不是合成全定義 | 分開斷言：`cat_units` 抓非自反、`composition_total` 抓非傳遞 |
+| 4 | `@twist.grp_zero_vec` 不存在 | 用了不存在的 API | 自寫 `grp_zero_code`（掃描全部編碼找零元素） |
+| 5 | `catify` 檔案反覆出現 `Array[Array[Int32]>`（少一個 `]`） | 我自己的批次正規化腳本把 `]]` 誤折成 `]>` | 加了一道 `[Int32]> → [Int32]]` 的收尾修復，並在每次寫檔後跑 `grep -c '\[Int32\]>'` 當守門 |
+| 6 | `cat_new` 對 `n = 64` 的類群胚要配置 `n³ = 262144` 個矩陣 | 每個槽位各配置一份空矩陣 | 全部槽位共用**同一個**空矩陣（只讀不寫，`cat_set_mu` 才換新物件） |
+| 7 | `catify` 測試首次編譯即報 `@nc` / `@canon` 未匯入 | 黑箱測試看不到 `moon.pkg` 的套件，除非主檔真的用到 | 在主檔加 `dihedral_class_keys`（真的同時用到 `nc` 與 `canon`），測試改呼叫它 |
+
+### 8.2 一條方法論（第二次出現，值得記）
+
+> **「公理通過」不等於「結構正確」——要看公理是否足以分辨反例。**
+> 第 2 條是本專案第二次遇到「我的定理比真實現象更強」：第一次是 §7.2 的 Burnside（族不封閉），
+> 這次是結合律對零合成不敏感。兩次都是**測試先抓到**，而不是審閱時想到。
+
+### 8.3 去重與減債
+
+* `cat_kron` / `identity_mat` 只有一份；`cat_product` 直接複用 `cat_mu` 而不是重寫合成。
+* `cat_thin` / `cat_relation_groupoid` 共用同一個「若 `rel[i][k]` 則唯一態射」規則（差別只在語義註解）。
+* `cat_face_poset` 由 `cat_thin` 組裝；`graded_euler` 由既有的 `cx_betti_all` / `cx_euler` 交叉驗證。
+* 類群胚 `cat_class_groupoid` 與 `distinct_keys` 互相稽核（兩條路徑必須同值）。
+
+### 8.4 重跑
+
+```sh
+export PATH="$HOME/.moon/bin:$PATH"
+cd tensorlab
+moon clean && moon check     # 0 errors, 0 warnings
+moon test                    # Total tests: 176, passed: 176, failed: 0
+moon run cmd/main            # 180 行（新增 §29 區段）
+```
+
+逐包：core 10、tensor 12、nc 10、twist 8、radon 5、gauge 9、metric 6、evolve 7、hyper 7、spectral 12、
+ledger 7、relations 8、cellcx 3、ss 5、serre 4、adams 5、grotop 6、condensed 5、ahss 6、dtensor 4、xops 5、
+canon 19、**catify 13**。

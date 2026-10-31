@@ -33,6 +33,7 @@ ahss           分次代數上的扭曲 Atiyah–Hirzebruch 譜序列（d₃ = S
 dtensor        導出張量積：Koszul 自由分解、Tor = Λ 在 2g 生成元上、Künneth
 xops           交叉運算：H³ 可見性、並的可加性、非交叉森林 site、twist 黏合障礙
 canon          逐結構規範形：RREF/Smith/HNF/共軛軌道/圖同構/二面體/上同調/曲率…（完備性逐條標註）
+catify         逐結構範疇化：顯式有限線性範疇、範疇公理機器驗證、函子/自然變換、群胚基數、decat
 cmd/main       報告產生器（即時重算 THEORY.md 的數值結論）
 ```
 
@@ -41,24 +42,24 @@ cmd/main       報告產生器（即時重算 THEORY.md 的數值結論）
 ```sh
 export PATH="$HOME/.moon/bin:$PATH"
 moon check          # 0 errors, 0 warnings
-moon test           # Total tests: 163, passed: 163, failed: 0
-moon run cmd/main   # 171 行即時重算報告
+moon test           # Total tests: 176, passed: 176, failed: 0
+moon run cmd/main   # 181 行即時重算報告
 ```
 
 單套件測試請在**根目錄**執行：
 `moon test --package username/tensorlab/<pkg>`，`<pkg>` ∈
-`core | tensor | nc | twist | gauge | radon | metric | evolve | hyper | spectral | ledger | relations | cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops`
+`core | tensor | nc | twist | gauge | radon | metric | evolve | hyper | spectral | ledger | relations | cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops | canon | catify`
 （在套件目錄內跑 `moon test` 會跑整個專案，數字是累計值。）
 
-## 測試分佈（163）
+## 測試分佈（176）
 
 | core | tensor | nc | twist | gauge | radon | metric | evolve | hyper | spectral | ledger | relations |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 10 | 12 | 10 | 8 | 9 | 5 | 6 | 7 | 7 | 12 | 7 | 8 |
 
-| cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops | canon |
-|---|---|---|---|---|---|---|---|---|---|
-| 3 | 5 | 4 | 5 | 6 | 5 | 6 | 4 | 5 | 19 |
+| cellcx | ss | serre | adams | grotop | condensed | ahss | dtensor | xops | canon | catify |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 3 | 5 | 4 | 5 | 6 | 5 | 6 | 4 | 5 | 19 | 13 |
 
 ## 注意
 

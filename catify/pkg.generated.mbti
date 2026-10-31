@@ -1,0 +1,124 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "username/tensorlab/catify"
+
+import {
+  "username/tensorlab/cellcx",
+  "username/tensorlab/core",
+  "username/tensorlab/grotop",
+  "username/tensorlab/twist",
+}
+
+// Values
+pub fn canon_flatten(@core.Mat) -> Array[Int32]
+
+pub fn cat_action_groupoid(@twist.Grp, Int32, (Int32, Int32) -> Int32, Int32) -> Cat
+
+pub fn cat_assoc(Cat) -> Bool
+
+pub fn cat_build(Array[Array[Int32]], (Int32, Int32, Int32, Int32, Int32) -> Int32, Int32) -> Cat
+
+pub fn cat_class_groupoid(Array[Array[Int32]]) -> Cat
+
+pub fn cat_components(Cat) -> Array[Int32]
+
+pub fn cat_composition_total(Cat) -> Bool
+
+pub fn cat_dim(Cat, Int32, Int32) -> Int32
+
+pub fn cat_discrete(Int32, Int32) -> Cat
+
+pub fn cat_euler_pair(@cellcx.CellCx) -> (Int32, Int32)
+
+pub fn cat_face_poset(Array[Array[Int32]], Int32) -> Cat
+
+pub fn cat_from_group(@twist.Grp, Int32) -> Cat
+
+pub fn cat_group_table_matches(Cat, @twist.Grp) -> Bool
+
+pub fn cat_groupoid_cardinality(Cat) -> Frac
+
+pub fn cat_is_category(Cat) -> Bool
+
+pub fn cat_kron(@core.Mat, @core.Mat, Int32) -> @core.Mat
+
+pub fn cat_mu(Cat, Int32, Int32, Int32) -> @core.Mat
+
+pub fn cat_new(Array[Array[Int32]], Int32) -> Cat
+
+pub fn cat_of_site(@grotop.Site) -> Cat
+
+pub fn cat_product(Cat, Cat) -> Cat
+
+pub fn cat_relation_groupoid(Array[Array[Bool]], Int32) -> Cat
+
+pub fn cat_roundtrip(Cat) -> (Bool, Int32)
+
+pub fn cat_set_id(Cat, Int32, Int32) -> Unit
+
+pub fn cat_set_mu(Cat, Int32, Int32, Int32, @core.Mat) -> Unit
+
+pub fn cat_thin(Array[Array[Bool]], Int32) -> Cat
+
+pub fn cat_units(Cat) -> (Bool, Bool)
+
+pub fn decat(Cat) -> Int32
+
+pub fn dihedral_class_keys(Int32) -> Array[Array[Int32]]
+
+pub fn distinct_keys(Array[Array[Int32]]) -> Int32
+
+pub fn frac(Int64, Int64) -> Frac
+
+pub fn frac_add(Frac, Frac) -> Frac
+
+pub fn frac_is_int(Frac) -> Bool
+
+pub fn functor_new(Cat, Cat, Array[Int32], Array[Array[@core.Mat]], String) -> Functor
+
+pub fn functor_valid(Functor) -> Bool
+
+pub fn gcd64(Int64, Int64) -> Int64
+
+pub fn graded_euler(Array[Int32]) -> Int32
+
+pub fn identity_mat(Int32) -> @core.Mat
+
+pub fn nat_new(Functor, Functor, Array[@core.Mat]) -> NatTrans
+
+pub fn nat_valid(NatTrans) -> Bool
+
+pub fn sieve_subfunctor_count(@grotop.Site, Int32) -> (Int32, Int32)
+
+// Errors
+
+// Types and methods
+pub struct Cat {
+  n : Int32
+  hom : Array[Array[Int32]]
+  mu : Array[Array[Array[@core.Mat]]]
+  ids : Array[Int32]
+  p : Int32
+}
+
+pub struct Frac {
+  num : Int64
+  den : Int64
+}
+
+pub struct Functor {
+  src : Cat
+  dst : Cat
+  on_obj : Array[Int32]
+  on_hom : Array[Array[@core.Mat]]
+  name : String
+}
+
+pub struct NatTrans {
+  f : Functor
+  g : Functor
+  comp : Array[@core.Mat]
+}
+
+// Type aliases
+
+// Traits
